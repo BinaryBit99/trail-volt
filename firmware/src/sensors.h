@@ -14,7 +14,8 @@
 typedef struct {
     uint16_t cell_1_voltage_mv;
     uint16_t cell_2_voltage_mv;
-    uint16_t cell_temperature_c;
+    uint16_t cell_1_temperature_c;
+    uint16_t cell_2_temperature_c;
     uint16_t charge_rate_ma;
     uint8_t values_valid;
 } sensor_state_t;

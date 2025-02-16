@@ -72,7 +72,7 @@ void configure_display(u8g2_t *u8g2) {
     u8g2_Setup_sh1106_i2c_128x64_noname_f(u8g2, U8G2_R0, u8x8_byte_hw_i2c, u8x8_avr_gpio_and_delay);
     
     // Set I2C address for the SH1106 display (0x3C or 0x3D depending on the display)
-    u8g2_SetI2CAddress(u8g2, 0x3C << 1);  // Shift left to match 7-bit address format
+    u8g2_SetI2CAddress(u8g2, DISPLAY_I2C_ADDRESS << 1);  // Shift left to match 7-bit address format
     u8g2_InitDisplay(u8g2);
     u8g2_SetPowerSave(u8g2, 0);  // Wake up the display
     
@@ -165,10 +165,13 @@ void update_display(u8g2_t *u8g2, sensor_state_t *sensor_state) {
     u8g2_DrawStr(u8g2, text_start_x, y_pos, str_buf);
     y_pos += line_height;
     
-    snprintf(str_buf, sizeof(str_buf), "Temp: %dC", sensor_state->cell_temperature_c);
+    snprintf(str_buf, sizeof(str_buf), "Temp 1: %dC", sensor_state->cell_1_temperature_c);
     u8g2_DrawStr(u8g2, text_start_x, y_pos, str_buf);
     y_pos += line_height;
 
+    snprintf(str_buf, sizeof(str_buf), "Temp 2: %dC", sensor_state->cell_2_temperature_c);
+    u8g2_DrawStr(u8g2, text_start_x, y_pos, str_buf);
+    y_pos += line_height;
     
     snprintf(str_buf, sizeof(str_buf), "Curr: %dmA", sensor_state->charge_rate_ma);
     u8g2_DrawStr(u8g2, text_start_x, y_pos, str_buf);

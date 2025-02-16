@@ -8,7 +8,7 @@
 #include "sensors.h"
 #include <avr/delay.h>
 
-uint16_t convert_from_adc(uint16_t adc_value);
+uint16_t convert_adc_value(uint16_t adc_value);
 uint16_t read_from_adc(adc_channel_t channel);
 
 void update_sensor_state(sensor_state_t *current_state)
@@ -25,10 +25,14 @@ void update_sensor_state(sensor_state_t *current_state)
     
     /* ADC2 */
     value = read_from_adc(ADC0_CHANNEL_AIN2);
-    current_state->cell_temperature_c = value;
+    current_state->cell_1_temperature_c = value;
     
     /* ADC3 */
     value = read_from_adc(ADC0_CHANNEL_AIN3);
+    current_state->cell_2_temperature_c = value;
+    
+    /* ADC4 */
+    value = read_from_adc(ADC0_CHANNEL_AIN4);
     current_state->charge_rate_ma = value;
     
     // Set valid
@@ -46,10 +50,10 @@ uint16_t read_from_adc(adc_channel_t channel)
     adc_result_t adc_result = ADC0_ConversionResultGet();
     ADC0_ConversionDoneInterruptFlagClear();
     
-    return convert_from_adc(adc_result);
+    return convert_adc_value(adc_result);
 }
 
-uint16_t convert_from_adc(uint16_t adc_value)
+uint16_t convert_adc_value(uint16_t adc_value)
 {
     return adc_value / ADC_ACCUMULATION;
 }

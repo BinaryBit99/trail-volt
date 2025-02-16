@@ -12,6 +12,8 @@
 #include "../lib/u8g2.X/u8g2.h"
 #include "../lib/twi.X/twi-host.X/peripherals/TWI/TWI_host.h"
 
+#define DISPLAY_I2C_ADDRESS 0x3c
+
 void configure_display(u8g2_t *u8g2);
 void update_display(u8g2_t *u8g2, sensor_state_t *sensor_state);
 void draw_logo(u8g2_t *u8g2);
