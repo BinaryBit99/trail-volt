@@ -36,7 +36,8 @@ Adafruit_SH1106G display = Adafruit_SH1106G(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, 
 sensor_state_t sensor_state = {0, 0, 0, 0, false};
 
 void setup() {
-    Serial.begin(115200);
+    Serial.begin(9600);
+    Serial.println("Starting");
     pinMode(PWM_PIN, OUTPUT);
 
     // Initialize PWM Timer
@@ -50,7 +51,7 @@ void setup() {
     // Initialize INA260
     if (!ina260.begin()) {
        Serial.println("Couldn't find INA260");
-       while (1);
+       //while (1);
     }
     configure_display(&display);
     draw_logo(&display);
@@ -61,13 +62,14 @@ void setup() {
     pinMode(CELL1_TEMP_PIN, INPUT);
     pinMode(CELL2_TEMP_PIN, INPUT);
     pinMode(CHARGE_RATE_PIN, INPUT);
+    analogReference(DEFAULT);
 }
 
 void loop() {
     // Read voltage and current
-    float voltage = ina260.readBusVoltage();
-    float current = ina260.readCurrent();
-    float power = voltage * current;
+    // float voltage = ina260.readBusVoltage();
+    // float current = ina260.readCurrent();
+    // float power = voltage * current;
     switch(application_state) {
         case STATE_MONITORING:
             check_update_state(&application_state);
@@ -83,28 +85,28 @@ void loop() {
         default:
             break;
     }
-    // Perturb and Observe Algorithm
-    if (power > prevPower) {
-       // Keep moving in same direction
-       currentDuty += increasing ? STEP_SIZE : -STEP_SIZE;
-    } else {
-       // Reverse direction
-       increasing = !increasing;
-       currentDuty += increasing ? STEP_SIZE : -STEP_SIZE;
-     }
+    // // Perturb and Observe Algorithm
+    // if (power > prevPower) {
+    //    // Keep moving in same direction
+    //    currentDuty += increasing ? STEP_SIZE : -STEP_SIZE;
+    // } else {
+    //    // Reverse direction
+    //    increasing = !increasing;
+    //    currentDuty += increasing ? STEP_SIZE : -STEP_SIZE;
+    //  }
 
-     // Ensure duty stays within bounds
-     currentDuty = constrain(currentDuty, 0, TOP_VALUE);
+    //  // Ensure duty stays within bounds
+    //  currentDuty = constrain(currentDuty, 0, TOP_VALUE);
 
-     // Update PWM and store power
-     OCR1A = currentDuty;
-     prevPower = power;
+    //  // Update PWM and store power
+    //  OCR1A = currentDuty;
+    //  prevPower = power;
 
      // Add debug output
-     Serial.print("Voltage: "); Serial.print(voltage, 2); Serial.print("V\t");
-     Serial.print("Current: "); Serial.print(current, 2); Serial.print("A\t");
-     Serial.print("Power: "); Serial.print(power, 2); Serial.print("W\t");
-     Serial.print("Duty: "); Serial.println(map(currentDuty, 0, TOP_VALUE, 0, 1000)/10.0, 1);
+    //  Serial.print("Voltage: "); Serial.print(voltage, 2); Serial.print("V\t");
+    //  Serial.print("Current: "); Serial.print(current, 2); Serial.print("A\t");
+    //  Serial.print("Power: "); Serial.print(power, 2); Serial.print("W\t");
+    //  Serial.print("Duty: "); Serial.println(map(currentDuty, 0, TOP_VALUE, 0, 1000)/10.0, 1);
 
-     delay(SAMPLE_DELAY);
+    //delay(5000);
 }

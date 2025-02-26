@@ -19,8 +19,8 @@
  */
 uint16_t adc_to_mv(uint16_t adc_value, float voltage_divider_ratio) {
     // Arduino uses 10-bit ADC (0-1023)
-    float voltage = (adc_value * ADC_VREF * 1000.0) / 4096.0;
-    return (uint16_t)(voltage / voltage_divider_ratio);
+    float voltage = (adc_value * ADC_VREF) / 1024;
+    return (uint16_t)(voltage * 1000 / voltage_divider_ratio);
 }
 
 /**
@@ -33,6 +33,7 @@ uint16_t read_from_adc(int pin, float voltage_divider_ratio) {
     // For Arduino Uno/Nano/etc, we need to use analogRead(A0 + pin)
     // This maps digital pins to their analog input numbers
     uint16_t raw_value = analogRead(pin);
+    //Serial.print("ADC ("); Serial.print(pin); Serial.print("): "); Serial.println(raw_value);
     return adc_to_mv(raw_value, voltage_divider_ratio);
 }
 
