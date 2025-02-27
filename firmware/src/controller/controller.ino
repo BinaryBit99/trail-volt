@@ -7,30 +7,14 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 
-
-
-// PWM Configuration
-#define PWM_PIN 9
-#define PWM_FREQ 20000
-#define PRESCALER 1
-#define TOP_VALUE (F_CPU / (PRESCALER * PWM_FREQ) - 1)
-
-// MPPT Parameters
-#define STEP_SIZE 1      // Adjustment step size (1-5)
-#define SAMPLE_DELAY 50  // Stabilization time after adjustment (ms)
-
-volatile int currentDuty = TOP_VALUE / 2;  // Start at 50% duty
-float prevPower = 0;
-bool increasing = true;
-
 battery_status_t battery_status = { 0, 0, 0, 0 };
 charging_status_t charging_status = { 0, 0, 0 };
 
 volatile system_state_t system_state = {STATE_MONITORING, battery_status, charging_status};
 
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
-#define OLED_RESET -1   //   QT-PY / XIAO
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1 
 
 Adafruit_SH1106G display = Adafruit_SH1106G(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 Adafruit_INA260 ina260 = Adafruit_INA260();
