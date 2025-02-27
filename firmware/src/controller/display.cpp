@@ -91,8 +91,8 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     
     // Text area for sensor values
     uint8_t text_start_x = start_x + 2 * battery_width + battery_spacing + 8;
-    uint8_t text_start_y = 12;
-    uint8_t line_height = 12;
+    uint8_t text_start_y = 0;
+    uint8_t line_height = 8;
     
     // Maximum battery voltage
     float max_voltage = 4.2;
@@ -162,7 +162,7 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     }
     display->setTextSize(1);
     display->setFont(&Font5x5Fixed);
-    y_pos += line_height;
+    y_pos += line_height + 8;
 
     // Total voltage
     float avg_volt = (volt1 + volt2) / 2;
@@ -186,6 +186,12 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     display->print("P: ");
     display->print(system_state->charging_status.power_metrics.ina_power);
     display->print("W");
+    y_pos += line_height;
+
+    display->setCursor(text_start_x, y_pos);
+    display->print("Duty Cycle: ");
+    display->print(system_state->charging_status.perc_duty_cycle);
+    display->print("%");
     y_pos += line_height;
 
     display->display();
