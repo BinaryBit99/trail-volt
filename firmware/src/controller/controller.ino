@@ -61,7 +61,8 @@ void loop() {
             adjust_duty_cycle(&system_state.charging_status);
 
             // Read battery voltages & thermistor temperatures
-            update_battery_status(&system_state.battery_status);
+            update_battery_status(&system_state.battery_status)
+            ;
 
             update_display(&display, &system_state);
 
