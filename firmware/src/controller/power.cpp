@@ -35,7 +35,7 @@ uint16_t update_charging_status(charging_status_t *charging_status, const Adafru
      }
 
      // Ensure duty stays within bounds
-    charging_status->current_duty_cycle = constrain(new_duty_cycle, 0, 100);
+    return constrain(new_duty_cycle, 0, 255);
 }
 
 
