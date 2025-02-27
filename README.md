@@ -9,3 +9,6 @@
 | A4  | SDA           | I2C SDA                            |
 | A5  | SCL           | I2C SCL                            |
 | D3  | PWM OUTPUT    | PWM Output wave                    |
+
+### ADC
+For each ADC input put, add a 150kOhm pull-down resistor.
