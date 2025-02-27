@@ -10,6 +10,7 @@
 #include <Arduino.h>
 
 #include "sensors.h"
+#include "gpio.h"
 
 /**
  * @brief  Converts an ADC value to millivolts
@@ -37,22 +38,20 @@ uint16_t read_from_adc(int pin, float voltage_divider_ratio) {
     return adc_to_mv(raw_value, voltage_divider_ratio);
 }
 
-/**
- * @brief Updates all sensor readings in the sensor state structure
- * @param sensor_state: Pointer to sensor state structure to update
- */
-void update_sensor_state(sensor_state_t *sensor_state) {
+void update_battery_state(battery_state_t *battery_state) {
+    int test = A0;
+
     // Read cell voltages
-    sensor_state->cell_1_voltage_mv = read_from_adc(CELL1_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
-    sensor_state->cell_2_voltage_mv = read_from_adc(CELL2_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
+    battery_state->cell_1_voltage_mv = read_from_adc(CELL1_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
+    battery_state->cell_2_voltage_mv = read_from_adc(CELL2_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
     
     // Read temperatures (no voltage divider)
-    sensor_state->cell_1_temperature_c = read_from_adc(CELL1_TEMP_PIN, 1.0);
-    sensor_state->cell_2_temperature_c = read_from_adc(CELL2_TEMP_PIN, 1.0);
-    
-    // Read charge rate
-    sensor_state->charge_rate_ma = read_from_adc(CHARGE_RATE_PIN, 1.0);
-    
-    // Set valid flag
-    sensor_state->values_valid = true;
+    battery_state->cell_1_temperature_c = read_from_adc(CELL1_TEMP_PIN, 1.0);
+    battery_state->cell_2_temperature_c = read_from_adc(CELL2_TEMP_PIN, 1.0);
+}
+
+void update_power_state(Adafruit_INA260 *ina260, power_state_t *power_state) {
+    power_state->ina_bus_voltage = ina260->readBusVoltage();
+    power_state->ina_current = ina260->readCurrent();
+    power_state->ina_power = ina260->readPower();
 }

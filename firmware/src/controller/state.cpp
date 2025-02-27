@@ -6,7 +6,3 @@
  */
 
 #include "state.h"
-
-int check_update_state(volatile application_state_t *state) {
-    return 0;
-}
