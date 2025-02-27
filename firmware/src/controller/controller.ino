@@ -28,7 +28,7 @@ void setup() {
        Serial.println("Couldn't find INA260");
        //while (1);
     }
-
+    
     configure_display(&display);
     draw_logo(&display);
     delay(2500);

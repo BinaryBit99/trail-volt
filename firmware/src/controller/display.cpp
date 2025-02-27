@@ -2,6 +2,8 @@
 #include <SPI.h>
 #include <Wire.h>
 #include "display.h"
+#include "Fonts/GFX_fonts/Font5x5Fixed.h"
+#include "Fonts/GFX_fonts/Font5x7FixedMono.h"
 
 void draw_logo(Adafruit_SH1106G *display) {
   // Define the logo bitmap
@@ -67,6 +69,7 @@ void configure_display(Adafruit_SH1106G *display) {
 
     // Set the font
     display->setTextSize(1);
+    display->setFont(&Font5x5Fixed);
     display->setTextColor(SH110X_WHITE);
 }
 
@@ -142,6 +145,25 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     // Display other sensor values on the right side
     uint8_t y_pos = text_start_y;
     
+    display->setFont();
+    display->setCursor(text_start_x, y_pos);
+    switch (system_state->mode) {
+        case STATE_MONITORING:
+            display->print("MONITORING");
+            break;
+        case STATE_CHARGING:
+            display->print("CHARGING");
+            break;
+        case STATE_SLEEP:
+            display->print("SLEEP");
+            break;
+        default:
+            break;
+    }
+    display->setTextSize(1);
+    display->setFont(&Font5x5Fixed);
+    y_pos += line_height;
+
     // Total voltage
     float avg_volt = (volt1 + volt2) / 2;
     display->setCursor(text_start_x, y_pos);
