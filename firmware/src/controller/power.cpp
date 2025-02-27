@@ -11,6 +11,7 @@
 #include <Arduino.h>
 
 
+
 uint16_t update_charging_status(charging_status_t *charging_status, const Adafruit_INA260 *ina260) {
 
     // Make a copy before updating for comparison
