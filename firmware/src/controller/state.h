@@ -33,7 +33,7 @@ typedef struct {
 typedef struct {
   bool charging;
   bool power_is_increasing;
-  uint8_t current_duty_cycle;
+  uint8_t perc_duty_cycle;
   power_metrics_t power_metrics;
 } charging_status_t;
 

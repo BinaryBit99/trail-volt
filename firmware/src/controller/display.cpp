@@ -6,8 +6,8 @@
 #include "Fonts/GFX_fonts/Font5x7FixedMono.h"
 
 void draw_logo(Adafruit_SH1106G *display) {
-  // Define the logo bitmap
-  static const unsigned char PROGMEM logo_bits[] = {
+    // Define the logo bitmap
+    static const unsigned char PROGMEM logo_bits[] = {
         // '3', 128x40px
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -86,7 +86,7 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     uint8_t terminal_width = 6;
     uint8_t terminal_height = 3;
     uint8_t battery_spacing = 8;
-    uint8_t start_x = 5;
+    uint8_t start_x = 0;
     uint8_t start_y = 10; // Moved down slightly to fit temperature text above
     
     // Text area for sensor values
@@ -124,22 +124,22 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     
     // Display temperature readings above respective batteries
     // Battery 1 temperature above first battery
-    display->setCursor(start_x + (battery_width - 24) / 2, start_y - 5);
+    display->setCursor(start_x + (battery_width - 14) / 2, start_y - 5);
     display->print(system_state->battery_status.cell_1_temperature_c);
     display->print("C");
 
     // Battery 2 temperature above second battery
-    display->setCursor(batt2_x + (battery_width - 24) / 2, start_y - 5);
+    display->setCursor(batt2_x + (battery_width - 14) / 2, start_y - 5);
     display->print(system_state->battery_status.cell_2_temperature_c);
     display->print("C");
     
     // Display voltage readings under respective batteries
     // Battery 1 voltage
-    display->setCursor(start_x + (battery_width - 24) / 2, start_y + terminal_height + battery_height + 10);
+    display->setCursor(start_x + (battery_width - 15) / 2, start_y + terminal_height + battery_height + 10);
     display->print(volt1, 2);  // Print voltage with 2 decimal places
     
     // Battery 2 voltage
-    display->setCursor(batt2_x + (battery_width - 24) / 2, start_y + terminal_height + battery_height + 10);
+    display->setCursor(batt2_x + (battery_width - 15) / 2, start_y + terminal_height + battery_height + 10);
     display->print(volt2, 2);  // Print voltage with 2 decimal places
     
     // Display other sensor values on the right side
