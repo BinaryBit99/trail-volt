@@ -17,7 +17,7 @@
 #define i2c_address 0x3c
 
 void configure_display(Adafruit_SH1106G *display);
-void update_display(Adafruit_SH1106G *display, volatile const application_state_t *application_state);
+void update_display(Adafruit_SH1106G *display, volatile const system_state_t *system_state);
 void draw_logo(Adafruit_SH1106G *display);
 
 #endif	/* DISPLAY_H */

@@ -23,10 +23,10 @@ volatile int currentDuty = TOP_VALUE / 2;  // Start at 50% duty
 float prevPower = 0;
 bool increasing = true;
 
-battery_state_t battery_state = { 0, 0, 0, 0 };
-charge_state_t charge_state = { 0, 0, 0 };
+battery_status_t battery_status = { 0, 0, 0, 0 };
+charging_status_t charging_status = { 0, 0, 0 };
 
-volatile application_state_t application_state = {STATE_MONITORING, battery_state, charge_state};
+volatile system_state_t system_state = {STATE_MONITORING, battery_status, charging_status};
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -55,42 +55,42 @@ void setup() {
 }
 
 void loop() {
-    switch(application_state.mode) {
+    switch(system_state.mode) {
         case STATE_MONITORING:
             // Read battery voltages & thermistor temperatures
-            update_battery_state(&application_state.battery_state);
+            update_battery_status(&system_state.battery_status);
 
-            update_display(&display, &application_state);
+            update_display(&display, &system_state);
 
             // We only leave monitoring if charging begins
             if (is_charging()) {
-                application_state.mode = STATE_CHARGING;
+                system_state.mode = STATE_CHARGING;
             }
 
             break;
         case STATE_CHARGING:
 
             // Poll INA for current, voltage, and power readings
-            update_charge_state(&application_state.charge_state, &ina260);
+            update_charging_status(&system_state.charging_status, &ina260);
 
             // Adjust the duty cycle based on new power parameters
-            adjust_duty_cycle(&application_state.charge_state);
+            adjust_duty_cycle(&system_state.charging_status);
 
             // Read battery voltages & thermistor temperatures
-            update_battery_state(&application_state.battery_state);
+            update_battery_status(&system_state.battery_status);
 
-            update_display(&display, &application_state);
+            update_display(&display, &system_state);
 
             // Next state condition
             if (!is_charging()) {
-                application_state.mode = STATE_MONITORING;
+                system_state.mode = STATE_MONITORING;
             }
 
             break;
         case STATE_SLEEP:
             break;
         default:
-            application_state.mode = STATE_MONITORING;
+            system_state.mode = STATE_MONITORING;
             break;
     }
 }

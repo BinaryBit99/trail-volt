@@ -11,40 +11,40 @@
 #include <Arduino.h>
 
 
-uint16_t update_charge_state(charge_state_t *charge_state, const Adafruit_INA260 *ina260) {
+uint16_t update_charging_status(charging_status_t *charging_status, const Adafruit_INA260 *ina260) {
 
     // Make a copy before updating for comparison
-    charge_state_t old_charge_state = *charge_state;
+    charging_status_t old_charging_status = *charging_status;
 
     // Get new values from INA260
-    update_power_state(ina260, &charge_state->power_state);
+    update_power_metrics(ina260, &charging_status->power_metrics);
 
     uint8_t new_duty_cycle;
 
-    float old_power = old_charge_state.power_state.ina_power;
-    float new_power = charge_state->power_state.ina_power;
+    float old_power = old_charging_status.power_metrics.ina_power;
+    float new_power = charging_status->power_metrics.ina_power;
 
     // Perturb and Observe Algorithm
     if (new_power > old_power) {
        // Keep moving in same direction
-       new_duty_cycle += charge_state->power_is_increasing ? MPPT_STEP_SIZE : -MPPT_STEP_SIZE;
+       new_duty_cycle += charging_status->power_is_increasing ? MPPT_STEP_SIZE : -MPPT_STEP_SIZE;
     } else {
        // Reverse direction
-       charge_state->power_is_increasing = !(charge_state->power_is_increasing);
-       new_duty_cycle += charge_state->power_is_increasing ? MPPT_STEP_SIZE : -MPPT_STEP_SIZE;
+       charging_status->power_is_increasing = !(charging_status->power_is_increasing);
+       new_duty_cycle += charging_status->power_is_increasing ? MPPT_STEP_SIZE : -MPPT_STEP_SIZE;
      }
 
      // Ensure duty stays within bounds
-    charge_state->current_duty_cycle = constrain(new_duty_cycle, 0, 100);
+    charging_status->current_duty_cycle = constrain(new_duty_cycle, 0, 100);
 }
 
 
 
-void adjust_duty_cycle(const charge_state_t *charge_state) {
+void adjust_duty_cycle(const charging_status_t *charging_status) {
 
-    uint8_t duty_cycle = (uint8_t)(charge_state->current_duty_cycle * 255 / 100);
+    uint8_t duty_cycle = (uint8_t)(charging_status->current_duty_cycle * 255 / 100);
 
-    Serial.print("Setting duty cycle of: "); Serial.print(charge_state->current_duty_cycle); Serial.print(" to "); Serial.println(duty_cycle); 
+    Serial.print("Setting duty cycle of: "); Serial.print(charging_status->current_duty_cycle); Serial.print(" to "); Serial.println(duty_cycle); 
 
     analogWrite(PWM_PIN, duty_cycle);
 }

@@ -27,15 +27,17 @@ const float ADC_VREF = 5; // Arduino reference voltage
 
 /**
  * @brief  Updates sensor state based on values taken from ADC0.
- * @param  battery_state: A pointer to the global battery state.
+ * @param  battery_status: A pointer to the global battery status.
  */
-void update_battery_state(battery_state_t *battery_state);
+void update_battery_status(battery_status_t *battery_status);
 
 
 /**
  * @brief  Reads current from INA260.
+ * @param  ina260: A pointer to the global INA260 instance.
+ * @param  power_metrics: A pointer to the global power metrics.
  */
-void update_power_state(Adafruit_INA260 *ina260, power_state_t *power_state);
+void update_power_metrics(Adafruit_INA260 *ina260, power_metrics_t *power_metrics);
 
 #endif	/* SENSORS_H */
 

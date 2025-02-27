@@ -70,7 +70,7 @@ void configure_display(Adafruit_SH1106G *display) {
     display->setTextColor(SH110X_WHITE);
 }
 
-void update_display(Adafruit_SH1106G *display, volatile const application_state_t *application_state) {
+void update_display(Adafruit_SH1106G *display, volatile const system_state_t *system_state) {
     display->clearDisplay();
     
     // SH1106 128x64 display dimensions
@@ -99,7 +99,7 @@ void update_display(Adafruit_SH1106G *display, volatile const application_state_
     display->fillRect(start_x + (battery_width - terminal_width) / 2, start_y, terminal_width, terminal_height, SH110X_WHITE);
     
     // Calculate fill level for Battery 1
-    float volt1 = application_state->battery_state.cell_1_voltage_mv / 1000.0;
+    float volt1 = system_state->battery_status.cell_1_voltage_mv / 1000.0;
     uint8_t fill_height1 = (volt1 * battery_height) / max_voltage;
     if (fill_height1 > battery_height) fill_height1 = battery_height;
     
@@ -112,7 +112,7 @@ void update_display(Adafruit_SH1106G *display, volatile const application_state_
     display->fillRect(batt2_x + (battery_width - terminal_width) / 2, start_y, terminal_width, terminal_height, SH110X_WHITE);
     
     // Calculate fill level for Battery 2
-    float volt2 = application_state->battery_state.cell_2_voltage_mv / 1000.0;
+    float volt2 = system_state->battery_status.cell_2_voltage_mv / 1000.0;
     uint8_t fill_height2 = (volt2 * battery_height) / max_voltage;
     if (fill_height2 > battery_height) fill_height2 = battery_height;
     
@@ -122,12 +122,12 @@ void update_display(Adafruit_SH1106G *display, volatile const application_state_
     // Display temperature readings above respective batteries
     // Battery 1 temperature above first battery
     display->setCursor(start_x + (battery_width - 24) / 2, start_y - 5);
-    display->print(application_state->battery_state.cell_1_temperature_c);
+    display->print(system_state->battery_status.cell_1_temperature_c);
     display->print("C");
 
     // Battery 2 temperature above second battery
     display->setCursor(batt2_x + (battery_width - 24) / 2, start_y - 5);
-    display->print(application_state->battery_state.cell_2_temperature_c);
+    display->print(system_state->battery_status.cell_2_temperature_c);
     display->print("C");
     
     // Display voltage readings under respective batteries
@@ -151,18 +151,18 @@ void update_display(Adafruit_SH1106G *display, volatile const application_state_
     
     display->setCursor(text_start_x, y_pos);
     display->print("Sol. V.: ");
-    display->print(application_state->charge_state.power_state.ina_power, 2);  // Print average voltage with 2 decimal places
+    display->print(system_state->charging_status.power_metrics.ina_power, 2);  // Print average voltage with 2 decimal places
     y_pos += line_height;
 
     display->setCursor(text_start_x, y_pos);
     display->print("A: ");
-    display->print(application_state->charge_state.power_state.ina_current);
+    display->print(system_state->charging_status.power_metrics.ina_current);
     display->print("mA");
     y_pos += line_height;
 
     display->setCursor(text_start_x, y_pos);
     display->print("P: ");
-    display->print(application_state->charge_state.power_state.ina_power);
+    display->print(system_state->charging_status.power_metrics.ina_power);
     display->print("W");
     y_pos += line_height;
 

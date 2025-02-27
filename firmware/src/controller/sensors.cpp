@@ -38,20 +38,20 @@ uint16_t read_from_adc(int pin, float voltage_divider_ratio) {
     return adc_to_mv(raw_value, voltage_divider_ratio);
 }
 
-void update_battery_state(battery_state_t *battery_state) {
+void update_battery_status(battery_status_t *battery_status) {
     int test = A0;
 
     // Read cell voltages
-    battery_state->cell_1_voltage_mv = read_from_adc(CELL1_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
-    battery_state->cell_2_voltage_mv = read_from_adc(CELL2_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
+    battery_status->cell_1_voltage_mv = read_from_adc(CELL1_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
+    battery_status->cell_2_voltage_mv = read_from_adc(CELL2_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
     
     // Read temperatures (no voltage divider)
-    battery_state->cell_1_temperature_c = read_from_adc(CELL1_TEMP_PIN, 1.0);
-    battery_state->cell_2_temperature_c = read_from_adc(CELL2_TEMP_PIN, 1.0);
+    battery_status->cell_1_temperature_c = read_from_adc(CELL1_TEMP_PIN, 1.0);
+    battery_status->cell_2_temperature_c = read_from_adc(CELL2_TEMP_PIN, 1.0);
 }
 
-void update_power_state(Adafruit_INA260 *ina260, power_state_t *power_state) {
-    power_state->ina_bus_voltage = ina260->readBusVoltage();
-    power_state->ina_current = ina260->readCurrent();
-    power_state->ina_power = ina260->readPower();
+void update_power_metrics(Adafruit_INA260 *ina260, power_metrics_t *power_metrics) {
+    power_metrics->ina_bus_voltage = ina260->readBusVoltage();
+    power_metrics->ina_current = ina260->readCurrent();
+    power_metrics->ina_power = ina260->readPower();
 }
