@@ -12,7 +12,8 @@
 
 typedef enum {
   STATE_SLEEP,
-  STATE_CHARGING,
+  STATE_RECEIVING,
+  STATE_SUPPLYING,
   STATE_MONITORING
 } application_mode_t;
 

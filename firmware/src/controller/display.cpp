@@ -4,6 +4,7 @@
 #include "display.h"
 #include "Fonts/GFX_fonts/Font5x5Fixed.h"
 #include "Fonts/GFX_fonts/Font5x7FixedMono.h"
+#include "Fonts/FreeSansBold6pt7b.h"
 
 void draw_logo(Adafruit_SH1106G *display) {
     // Define the logo bitmap
@@ -71,14 +72,12 @@ void configure_display(Adafruit_SH1106G *display) {
     display->setTextSize(1);
     display->setFont(&Font5x5Fixed);
     display->setTextColor(SH110X_WHITE);
+    display->setRotation(0);
 }
 
 void update_display(Adafruit_SH1106G *display, volatile const system_state_t *system_state) {
+
     display->clearDisplay();
-    
-    // SH1106 128x64 display dimensions
-    const uint8_t disp_width = 128;
-    const uint8_t disp_height = 64;
     
     // Battery dimensions and positions
     uint8_t battery_width = 16;
@@ -141,65 +140,96 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     // Battery 2 voltage
     display->setCursor(batt2_x + (battery_width - 15) / 2, start_y + terminal_height + battery_height + 10);
     display->print(volt2, 2);  // Print voltage with 2 decimal places
-    
+
     // Display other sensor values on the right side
-    uint8_t y_pos = text_start_y;
-    
-    display->setFont();
-    display->setCursor(text_start_x, y_pos);
+    uint8_t y_pos = text_start_y + 10;
+
+    float total_voltage = volt1 + volt2;
     switch (system_state->mode) {
-        case STATE_MONITORING:
-            display->print("MONITORING");
-            break;
-        case STATE_CHARGING:
-            display->print("CHARGING");
-            break;
         case STATE_SLEEP:
-            display->print("SLEEP");
+
+            break;
+        case STATE_RECEIVING:
+
+            display->setFont(&FreeSansBold6pt7b);
+            display->setCursor(text_start_x, y_pos);
+            display->print("RECEIVING");
+            display->setTextSize(1);
+            display->setFont(&Font5x5Fixed);
+            y_pos += line_height;
+
+            // Total voltage
+            
+            display->setCursor(text_start_x, y_pos);
+            display->print("V-BAT: ");
+            display->print(total_voltage, 2);  // Print average voltage with 2 decimal places
+            display->print("V");
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            display->print("V-SOL.: ");
+            display->print(system_state->charging_status.power_metrics.ina_power, 2);  // Print average voltage with 2 decimal places
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            display->print("A: ");
+            display->print(system_state->charging_status.power_metrics.ina_current);
+            display->print("mA");
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            display->print("P: ");
+            display->print(system_state->charging_status.power_metrics.ina_power);
+            display->print("W");
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            display->print("Duty Cycle: ");
+            display->print(system_state->charging_status.perc_duty_cycle);
+            display->print("%");
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            if (system_state->battery_status.lower_discharging) {
+                display->print("DRAINING LOWER");
+                
+            } else if (system_state->battery_status.upper_discharging) {
+                display->print("DRAINING UPPER");
+            }
+            y_pos += line_height;
+
+            break;
+        case STATE_MONITORING:
+
+            display->setFont(&FreeSansBold6pt7b);
+            display->setCursor(text_start_x, y_pos);
+            display->print("MONITORING");
+            display->setTextSize(1);
+            display->setFont(&Font5x5Fixed);
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            display->print("V-BAT: ");
+            display->print(total_voltage, 2);  // Print average voltage with 2 decimal places
+            display->print("V");
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            display->print("Duty Cycle: ");
+            display->print(system_state->charging_status.perc_duty_cycle);
+            display->print("%");
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            if (system_state->battery_status.lower_discharging) {
+                display->print("DRAINING LOWER");
+                
+            } else if (system_state->battery_status.upper_discharging) {
+                display->print("DRAINING UPPER");
+            }
             break;
         default:
             break;
-    }
-    display->setTextSize(1);
-    display->setFont(&Font5x5Fixed);
-    y_pos += line_height + 8;
-
-    // Total voltage
-    float avg_volt = volt1 + volt2;
-    display->setCursor(text_start_x, y_pos);
-    display->print("Bat. V.: ");
-    display->print(avg_volt, 2);  // Print average voltage with 2 decimal places
-    y_pos += line_height;
-    
-    // display->setCursor(text_start_x, y_pos);
-    // display->print("Sol. V.: ");
-    // display->print(system_state->charging_status.power_metrics.ina_power, 2);  // Print average voltage with 2 decimal places
-    // y_pos += line_height;
-
-    // display->setCursor(text_start_x, y_pos);
-    // display->print("A: ");
-    // display->print(system_state->charging_status.power_metrics.ina_current);
-    // display->print("mA");
-    // y_pos += line_height;
-
-    // display->setCursor(text_start_x, y_pos);
-    // display->print("P: ");
-    // display->print(system_state->charging_status.power_metrics.ina_power);
-    // display->print("W");
-    // y_pos += line_height;
-
-    display->setCursor(text_start_x, y_pos);
-    display->print("Duty Cycle: ");
-    display->print(system_state->charging_status.perc_duty_cycle);
-    display->print("%");
-    y_pos += line_height;
-
-    display->setCursor(text_start_x, y_pos);
-    if (system_state->battery_status.lower_discharging) {
-        display->print("DRAINING LOWER");
-        
-    } else if (system_state->battery_status.upper_discharging) {
-        display->print("DRAINING UPPER");
     }
 
     display->display();

@@ -46,11 +46,9 @@ void adjust_duty_cycle(const charging_status_t *charging_status) {
 
     duty_cycle = constrain(duty_cycle, 0, 255);
 
-    Serial.print("Setting duty cycle of: "); Serial.print(charging_status->perc_duty_cycle); Serial.print(" to "); Serial.println(duty_cycle); 
-
     analogWrite(PWM_PIN, duty_cycle);
 }
 
-int is_charging() {
+int is_receiving_charge() {
     return 0;
 }

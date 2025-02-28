@@ -17,7 +17,7 @@
  * @brief  Determines if battery are in a state of charging.
  * @return 1 if batteries are charging, 0 if not.
  */
-int is_charging();
+int is_receiving_charge();
 
 /**
  * @brief  Updates the global charging status and calculates the appropriate PWM duty cycle.

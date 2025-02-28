@@ -16,6 +16,9 @@
 
 #define i2c_address 0x3c
 
+#define DISP_WIDTH 128
+#define DISP_HEIGHT 64
+
 void configure_display(Adafruit_SH1106G *display);
 void update_display(Adafruit_SH1106G *display, volatile const system_state_t *system_state);
 void draw_logo(Adafruit_SH1106G *display);

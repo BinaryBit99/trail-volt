@@ -48,18 +48,22 @@ void loop() {
             // Check if cells need passive balancing
             handle_cell_balancing(&system_state.battery_status);
 
+            // Refresh display
             update_display(&display, &system_state);
             
             // We only leave monitoring if charging begins
-            if (is_charging()) {
-                system_state.mode = STATE_CHARGING;
+            if (is_receiving_charge()) {
+                system_state.mode = STATE_RECEIVING;
             }
 
             break;
-        case STATE_CHARGING:
+        case STATE_RECEIVING:
 
             // Poll INA for current, voltage, and power readings
             update_charging_status(&system_state.charging_status, &ina260);
+
+            // Check if cells need passive balancing
+            handle_cell_balancing(&system_state.battery_status);
 
             // Adjust the duty cycle based on new power parameters
             adjust_duty_cycle(&system_state.charging_status);
@@ -67,10 +71,11 @@ void loop() {
             // Read battery voltages & thermistor temperatures
             update_battery_status(&system_state.battery_status);
 
+            // Refresh display
             update_display(&display, &system_state);
 
             // Next state condition
-            if (!is_charging()) {
+            if (!is_receiving_charge()) {
                 system_state.mode = STATE_MONITORING;
             }
 
@@ -81,6 +86,5 @@ void loop() {
             system_state.mode = STATE_MONITORING;
             break;
 
-        Serial.println("out");
     }
 }
