@@ -102,7 +102,7 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     display->fillRect(start_x + (battery_width - terminal_width) / 2, start_y, terminal_width, terminal_height, SH110X_WHITE);
     
     // Calculate fill level for Battery 1
-    float volt1 = system_state->battery_status.cell_1_voltage_mv / 1000.0;
+    float volt1 = system_state->battery_status.upper_cell_voltage_mv / 1000.0;
     uint8_t fill_height1 = (volt1 * battery_height) / max_voltage;
     if (fill_height1 > battery_height) fill_height1 = battery_height;
     
@@ -115,7 +115,7 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     display->fillRect(batt2_x + (battery_width - terminal_width) / 2, start_y, terminal_width, terminal_height, SH110X_WHITE);
     
     // Calculate fill level for Battery 2
-    float volt2 = system_state->battery_status.cell_2_voltage_mv / 1000.0;
+    float volt2 = system_state->battery_status.lower_cell_voltage_mv / 1000.0;
     uint8_t fill_height2 = (volt2 * battery_height) / max_voltage;
     if (fill_height2 > battery_height) fill_height2 = battery_height;
     
@@ -165,7 +165,7 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     y_pos += line_height + 8;
 
     // Total voltage
-    float avg_volt = (volt1 + volt2) / 2;
+    float avg_volt = volt1 + volt2;
     display->setCursor(text_start_x, y_pos);
     display->print("Bat. V.: ");
     display->print(avg_volt, 2);  // Print average voltage with 2 decimal places

@@ -17,10 +17,12 @@ typedef enum {
 } application_mode_t;
 
 typedef struct {
-    uint16_t cell_1_voltage_mv;
-    uint16_t cell_2_voltage_mv;
-    uint16_t cell_1_temperature_c;
-    uint16_t cell_2_temperature_c;
+    int upper_cell_voltage_mv;
+    int lower_cell_voltage_mv;
+    int cell_1_temperature_c;
+    int cell_2_temperature_c;
+    bool upper_discharging;
+    bool lower_discharging;
 } battery_status_t;
 
 /* Child of charging status */

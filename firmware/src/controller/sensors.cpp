@@ -11,6 +11,7 @@
 
 #include "sensors.h"
 #include "gpio.h"
+#include "batteries.h"
 
 /**
  * @brief  Converts an ADC value to millivolts
@@ -18,10 +19,10 @@
  * @param  voltage_divider_ratio: The ratio by which the voltage is divided
  * @return Converted voltage in millivolts
  */
-uint16_t adc_to_mv(uint16_t adc_value, float voltage_divider_ratio) {
+int adc_to_mv(uint16_t adc_value, float voltage_divider_ratio) {
     // Arduino uses 10-bit ADC (0-1023)
     float voltage = (adc_value * ADC_VREF) / 1024;
-    return (uint16_t)(voltage * 1000 / voltage_divider_ratio);
+    return (voltage * 1000 / voltage_divider_ratio);
 }
 
 /**
@@ -30,21 +31,18 @@ uint16_t adc_to_mv(uint16_t adc_value, float voltage_divider_ratio) {
  * @param  voltage_divider_ratio: The ratio by which the voltage is divided
  * @return ADC reading in millivolts
  */
-uint16_t read_from_adc(int pin, float voltage_divider_ratio) {
-    // For Arduino Uno/Nano/etc, we need to use analogRead(A0 + pin)
-    // This maps digital pins to their analog input numbers
+int read_from_adc(int pin, float voltage_divider_ratio) {
     uint16_t raw_value = analogRead(pin);
-    //Serial.print("ADC ("); Serial.print(pin); Serial.print("): "); Serial.println(raw_value);
     return adc_to_mv(raw_value, voltage_divider_ratio);
 }
 
 void update_battery_status(battery_status_t *battery_status) {
-    int test = A0;
-
     // Read cell voltages
-    battery_status->cell_1_voltage_mv = read_from_adc(CELL1_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
-    battery_status->cell_2_voltage_mv = read_from_adc(CELL2_VOLTAGE_PIN, CELL_VOLTAGE_DIVIDER_RATIO);
-    
+    int total_voltage = read_from_adc(TOTAL_CELL_ADC_PIN, TOTAL_CELL_ADC_DIVISION);
+
+    battery_status->lower_cell_voltage_mv = read_from_adc(LOWER_CELL_ADC_PIN, LOWER_CELL_ADC_DIVISION);
+    battery_status->upper_cell_voltage_mv = total_voltage - battery_status->lower_cell_voltage_mv;
+
     // Read temperatures (no voltage divider)
     battery_status->cell_1_temperature_c = read_from_adc(CELL1_TEMP_PIN, 1.0);
     battery_status->cell_2_temperature_c = read_from_adc(CELL2_TEMP_PIN, 1.0);

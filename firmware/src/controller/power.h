@@ -24,7 +24,7 @@ int is_charging();
  * @param  charging_status: A pointer to the global charging status.
  * @return The new calculated PWM duty cycle.
  */
-uint16_t update_charging_status(charging_status_t *charging_status, const Adafruit_INA260 *ina260);
+uint8_t update_charging_status(charging_status_t *charging_status, const Adafruit_INA260 *ina260);
 
 /**
  * @brief  Configures of MPPT pwm signal.

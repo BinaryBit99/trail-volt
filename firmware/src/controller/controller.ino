@@ -6,9 +6,10 @@
 #include "gpio.h"
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
+#include "batteries.h"
 
 battery_status_t battery_status = { 0, 0, 0, 0 };
-charging_status_t charging_status = { 0, 0, 0 };
+charging_status_t charging_status = { 0, 0, 0,0, false, false };
 
 volatile system_state_t system_state = {STATE_MONITORING, battery_status, charging_status};
 
@@ -44,6 +45,9 @@ void loop() {
             // Read battery voltages & thermistor temperatures
             update_battery_status(&system_state.battery_status);
 
+            // Check if cells need passive balancing
+            handle_cell_balancing(&system_state.battery_status);
+
             update_display(&display, &system_state);
 
             // We only leave monitoring if charging begins
@@ -76,5 +80,7 @@ void loop() {
         default:
             system_state.mode = STATE_MONITORING;
             break;
+
+        Serial.println("out");
     }
 }

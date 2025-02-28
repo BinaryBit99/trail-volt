@@ -18,8 +18,6 @@
 
 const int pin = A0;
 
-// Configuration constants
-const float CELL_VOLTAGE_DIVIDER_RATIO = 1; // Assuming 3:1 voltage divider
 const float ADC_VREF = 5; // Arduino reference voltage
 
 
