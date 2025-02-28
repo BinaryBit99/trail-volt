@@ -171,28 +171,36 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     display->print(avg_volt, 2);  // Print average voltage with 2 decimal places
     y_pos += line_height;
     
-    display->setCursor(text_start_x, y_pos);
-    display->print("Sol. V.: ");
-    display->print(system_state->charging_status.power_metrics.ina_power, 2);  // Print average voltage with 2 decimal places
-    y_pos += line_height;
+    // display->setCursor(text_start_x, y_pos);
+    // display->print("Sol. V.: ");
+    // display->print(system_state->charging_status.power_metrics.ina_power, 2);  // Print average voltage with 2 decimal places
+    // y_pos += line_height;
 
-    display->setCursor(text_start_x, y_pos);
-    display->print("A: ");
-    display->print(system_state->charging_status.power_metrics.ina_current);
-    display->print("mA");
-    y_pos += line_height;
+    // display->setCursor(text_start_x, y_pos);
+    // display->print("A: ");
+    // display->print(system_state->charging_status.power_metrics.ina_current);
+    // display->print("mA");
+    // y_pos += line_height;
 
-    display->setCursor(text_start_x, y_pos);
-    display->print("P: ");
-    display->print(system_state->charging_status.power_metrics.ina_power);
-    display->print("W");
-    y_pos += line_height;
+    // display->setCursor(text_start_x, y_pos);
+    // display->print("P: ");
+    // display->print(system_state->charging_status.power_metrics.ina_power);
+    // display->print("W");
+    // y_pos += line_height;
 
     display->setCursor(text_start_x, y_pos);
     display->print("Duty Cycle: ");
     display->print(system_state->charging_status.perc_duty_cycle);
     display->print("%");
     y_pos += line_height;
+
+    display->setCursor(text_start_x, y_pos);
+    if (system_state->battery_status.lower_discharging) {
+        display->print("DRAINING LOWER");
+        
+    } else if (system_state->battery_status.upper_discharging) {
+        display->print("DRAINING UPPER");
+    }
 
     display->display();
 }

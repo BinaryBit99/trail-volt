@@ -49,7 +49,7 @@ void loop() {
             handle_cell_balancing(&system_state.battery_status);
 
             update_display(&display, &system_state);
-
+            
             // We only leave monitoring if charging begins
             if (is_charging()) {
                 system_state.mode = STATE_CHARGING;
