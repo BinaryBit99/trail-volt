@@ -1,9 +1,3 @@
-/* 
- * File:   state.h
- * Author: Kyle James
- *
- * Created on February 17, 2025, 11:55 AM
- */
 
 #ifndef STATE_H
 #define	STATE_H
@@ -18,10 +12,10 @@ typedef enum {
 } application_mode_t;
 
 typedef struct {
-    int upper_cell_voltage_mv;
-    int lower_cell_voltage_mv;
-    int cell_1_temperature_c;
-    int cell_2_temperature_c;
+    float upper_cell_voltage_v;
+    float lower_cell_voltage_v;
+    float cell_1_temperature_c;
+    float cell_2_temperature_c;
     bool upper_discharging;
     bool lower_discharging;
 } battery_status_t;
@@ -31,13 +25,13 @@ typedef struct {
   float ina_current;
   float ina_bus_voltage;
   float ina_power;
-  int charge_voltage_mv;
+  float charge_voltage_v;
 } power_metrics_t;
 
 typedef struct {
   bool charging;
   bool power_is_increasing;
-  uint8_t perc_duty_cycle;
+  uint8_t duty_cycle_uint8;
   power_metrics_t power_metrics;
 } charging_status_t;
 

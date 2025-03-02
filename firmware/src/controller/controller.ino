@@ -1,4 +1,4 @@
-// main.ino
+
 #include "display.h"
 #include "state.h"
 #include "charging.h"

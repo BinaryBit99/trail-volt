@@ -101,7 +101,7 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     display->fillRect(start_x + (battery_width - terminal_width) / 2, start_y, terminal_width, terminal_height, SH110X_WHITE);
     
     // Calculate fill level for Battery 1
-    float volt1 = system_state->battery_status.upper_cell_voltage_mv / 1000.0;
+    float volt1 = system_state->battery_status.upper_cell_voltage_v;
     uint8_t fill_height1 = (volt1 * battery_height) / max_voltage;
     if (fill_height1 > battery_height) fill_height1 = battery_height;
     
@@ -114,7 +114,7 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     display->fillRect(batt2_x + (battery_width - terminal_width) / 2, start_y, terminal_width, terminal_height, SH110X_WHITE);
     
     // Calculate fill level for Battery 2
-    float volt2 = system_state->battery_status.lower_cell_voltage_mv / 1000.0;
+    float volt2 = system_state->battery_status.lower_cell_voltage_v;
     uint8_t fill_height2 = (volt2 * battery_height) / max_voltage;
     if (fill_height2 > battery_height) fill_height2 = battery_height;
     
@@ -145,6 +145,8 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
     uint8_t y_pos = text_start_y + 10;
 
     float total_voltage = volt1 + volt2;
+    float percentage_duty_cycle = system_state->charging_status.duty_cycle_uint8 * ((float)100/255);
+
     switch (system_state->mode) {
         case STATE_SLEEP:
 
@@ -168,25 +170,25 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
 
             display->setCursor(text_start_x, y_pos);
             display->print("V-SUP.: ");
-            display->print(system_state->charging_status.power_metrics.charge_voltage_mv / 1000.0, 2);  // Print average voltage with 2 decimal places
+            display->print(system_state->charging_status.power_metrics.charge_voltage_v, 2);  // Print average voltage with 2 decimal places
             display->print("V");
             y_pos += line_height;
 
-            display->setCursor(text_start_x, y_pos);
-            display->print("A: ");
-            display->print(system_state->charging_status.power_metrics.ina_current);
-            display->print("mA");
-            y_pos += line_height;
+            // display->setCursor(text_start_x, y_pos);
+            // display->print("A: ");
+            // display->print(system_state->charging_status.power_metrics.ina_current);
+            // display->print("mA");
+            // y_pos += line_height;
 
-            display->setCursor(text_start_x, y_pos);
-            display->print("P: ");
-            display->print(system_state->charging_status.power_metrics.ina_power);
-            display->print("W");
-            y_pos += line_height;
+            // display->setCursor(text_start_x, y_pos);
+            // display->print("P: ");
+            // display->print(system_state->charging_status.power_metrics.ina_power);
+            // display->print("W");
+            // y_pos += line_height;
 
             display->setCursor(text_start_x, y_pos);
             display->print("Duty Cycle: ");
-            display->print(system_state->charging_status.perc_duty_cycle);
+            display->print(percentage_duty_cycle, 0);
             display->print("%");
             y_pos += line_height;
 
@@ -216,7 +218,7 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
 
             display->setCursor(text_start_x, y_pos);
             display->print("Duty Cycle: ");
-            display->print(system_state->charging_status.perc_duty_cycle);
+            display->print(percentage_duty_cycle, 0);
             display->print("%");
             y_pos += line_height;
 
