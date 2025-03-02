@@ -18,9 +18,9 @@
 
 /**
  * @brief  Determines if battery are in a state of charging.
- * @return 1 if batteries are charging, 0 if not.
+ * @return True if batteries are charging.
  */
-int is_receiving_charge();
+bool is_receiving_charge();
 
 /**
  * @brief  Updates the global charging status and calculates the appropriate PWM duty cycle.
@@ -45,6 +45,13 @@ void adjust_duty_cycle(const charging_status_t *charging_status);
  * @param  power_metrics: A pointer to the global power metrics.
  */
 void update_power_metrics(Adafruit_INA260 *ina260, power_metrics_t *power_metrics);
+
+/**
+ * @brief  Sets the shutdown pin
+ * @param  ina260: A pointer to the global INA260 instance.
+ * @param  power_metrics: A pointer to the global power metrics.
+ */
+void stop_supply_current();
 
 #endif	/* CHARGING_H */
 

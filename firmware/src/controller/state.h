@@ -8,7 +8,8 @@ typedef enum {
   STATE_SLEEP,
   STATE_RECEIVING,
   STATE_SUPPLYING,
-  STATE_MONITORING
+  STATE_MONITORING,
+  STATE_BALANCING
 } application_mode_t;
 
 typedef struct {

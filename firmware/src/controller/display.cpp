@@ -201,6 +201,42 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
             y_pos += line_height;
 
             break;
+        case STATE_BALANCING:
+            display->setFont(&FreeSansBold6pt7b);
+            display->setCursor(text_start_x, y_pos);
+            display->print("BALANCING");
+            display->setTextSize(1);
+            display->setFont(&Font5x5Fixed);
+            y_pos += line_height;
+
+            // Total voltage
+            display->setCursor(text_start_x, y_pos);
+            display->print("V-BAT: ");
+            display->print(total_voltage, 2);  // Print average voltage with 2 decimal places
+            display->print("V");
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            display->print("V-SUP.: ");
+            display->print(system_state->charging_status.power_metrics.charge_voltage_v, 2);  // Print average voltage with 2 decimal places
+            display->print("V");
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            display->print("Duty Cycle: ");
+            display->print(percentage_duty_cycle, 0);
+            display->print("%");
+            y_pos += line_height;
+
+            display->setCursor(text_start_x, y_pos);
+            if (system_state->battery_status.lower_discharging) {
+                display->print("DRAINING LOWER");
+            } else if (system_state->battery_status.upper_discharging) {
+                display->print("DRAINING UPPER");
+            }
+            y_pos += line_height;
+
+            break;
         case STATE_MONITORING:
 
             display->setFont(&FreeSansBold6pt7b);

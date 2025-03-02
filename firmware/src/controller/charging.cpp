@@ -57,7 +57,11 @@ void adjust_duty_cycle(const charging_status_t *charging_status) {
     analogWrite(PWM_PIN, duty_cycle);
 }
 
-int is_receiving_charge() {
-    return 0;
+bool is_receiving_charge() {
+    return true;
 }
 
+
+void stop_supply_current() {
+    return;
+}

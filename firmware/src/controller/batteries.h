@@ -16,12 +16,13 @@
  * @brief  Sets GPIO pins fed to cell balancing circuit and sets is_balancing flag.
  * @param  battery_status: A pointer to the current battery status.
  */
-void handle_cell_balancing(battery_status_t *battery_status);
+void balance_cells(battery_status_t *battery_status);
 
 /**
  * @brief  Updates sensor state based on values taken from ADC0.
  * @param  battery_status: A pointer to the global battery status.
+* @return  True is balancing is needed.
  */
-void update_battery_status(battery_status_t *battery_status);
+bool update_battery_status(battery_status_t *battery_status);
 
 #endif	/* BATTERIES_H */

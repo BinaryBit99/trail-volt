@@ -36,17 +36,21 @@ void setup() {
 }
 
 void loop() {
+
+    // Read battery voltages & thermistor temperatures
+    bool needs_balancing = update_battery_status(&system_state.battery_status);
+
+    // Poll power metrics
+    update_charging_status(&system_state.charging_status, &ina260);
+
     switch(system_state.mode) {
         case STATE_MONITORING:
-            // Read battery voltages & thermistor temperatures
-            update_battery_status(&system_state.battery_status);
 
-            // Check if cells need passive balancing
-            handle_cell_balancing(&system_state.battery_status);
+            if (needs_balancing) {
+                system_state.mode = STATE_BALANCING;
+                break;
+            }
 
-            // Refresh display
-            update_display(&display, &system_state);
-            
             // We only leave monitoring if charging begins
             if (is_receiving_charge()) {
                 system_state.mode = STATE_RECEIVING;
@@ -55,24 +59,33 @@ void loop() {
             break;
         case STATE_RECEIVING:
 
-            // Poll power metrics
-            update_charging_status(&system_state.charging_status, &ina260);
-
-            // Check if cells need passive balancing
-            handle_cell_balancing(&system_state.battery_status);
+            if (needs_balancing) {
+                system_state.mode = STATE_BALANCING;
+                break;
+            }
 
             // Adjust the duty cycle based on new power parameters
-            adjust_duty_cycle(&system_state.charging_status);
-
-            // Read battery voltages & thermistor temperatures
-            update_battery_status(&system_state.battery_status);
-
-            // Refresh display
-            update_display(&display, &system_state);
+            adjust_duty_cycle(system_state.charging_status.duty_cycle_uint8);
 
             // Next state condition
             if (!is_receiving_charge()) {
-                //system_state.mode = STATE_MONITORING;
+                system_state.mode = STATE_MONITORING;
+            }
+
+            break;
+        case STATE_BALANCING:
+
+            system_state.charging_status.duty_cycle_uint8 = 0;
+            // Stop charging until batteries are balanced
+            adjust_duty_cycle(&system_state.charging_status);
+            
+            stop_supply_current();
+
+            // Adjust GPIOs according to new battery status
+            balance_cells(&system_state.battery_status);
+
+            if (!needs_balancing) {
+                system_state.mode = STATE_MONITORING;
             }
 
             break;
@@ -83,4 +96,7 @@ void loop() {
             break;
 
     }
+    
+    // Refresh display
+    update_display(&display, &system_state);
 }
