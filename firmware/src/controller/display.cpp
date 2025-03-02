@@ -167,8 +167,9 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
             y_pos += line_height;
 
             display->setCursor(text_start_x, y_pos);
-            display->print("V-SOL.: ");
-            display->print(system_state->charging_status.power_metrics.ina_power, 2);  // Print average voltage with 2 decimal places
+            display->print("V-SUP.: ");
+            display->print(system_state->charging_status.power_metrics.charge_voltage_mv / 1000.0, 2);  // Print average voltage with 2 decimal places
+            display->print("V");
             y_pos += line_height;
 
             display->setCursor(text_start_x, y_pos);

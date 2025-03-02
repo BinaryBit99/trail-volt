@@ -6,7 +6,7 @@
 
 #define MPPT_STEP_SIZE 1
 
-#define CHARGE_VOLTAGE_DIVIDER_RATIO (13/18)
+#define CHARGE_VOLTAGE_DIVIDER_RATIO 2
 
 /**
  * @brief  Determines if battery are in a state of charging.
