@@ -14,4 +14,10 @@
  */
 void handle_cell_balancing(battery_status_t *battery_status);
 
+/**
+ * @brief  Updates sensor state based on values taken from ADC0.
+ * @param  battery_status: A pointer to the global battery status.
+ */
+void update_battery_status(battery_status_t *battery_status);
+
 #endif	/* BATTERIES_H */

@@ -1,17 +1,12 @@
-/* 
- * File:   power.h
- * Author: Kyle James
- *
- * Created on February 17, 2025, 12:18 PM
- */
-
-#ifndef POWER_H
-#define	POWER_H
+#ifndef CHARGING_H
+#define	CHARGING_H
 
 #include "state.h"
 #include <Adafruit_INA260.h>
 
 #define MPPT_STEP_SIZE 1
+
+#define CHARGE_VOLTAGE_DIVIDER_RATIO (13/18)
 
 /**
  * @brief  Determines if battery are in a state of charging.
@@ -37,8 +32,14 @@ void init_pwm();
  */
 void adjust_duty_cycle(const charging_status_t *charging_status);
 
+/**
+ * @brief  Reads current from INA260.
+ * @param  ina260: A pointer to the global INA260 instance.
+ * @param  power_metrics: A pointer to the global power metrics.
+ */
+void update_power_metrics(Adafruit_INA260 *ina260, power_metrics_t *power_metrics);
 
+#endif	/* CHARGING_H */
 
-#endif	/* POWER_H */
 
 

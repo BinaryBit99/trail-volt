@@ -9,7 +9,6 @@
 #ifndef DISPLAY_H
 #define	DISPLAY_H
 
-#include "sensors.h"
 #include "state.h"
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>

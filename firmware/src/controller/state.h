@@ -31,6 +31,7 @@ typedef struct {
   float ina_current;
   float ina_bus_voltage;
   float ina_power;
+  int charge_voltage_mv;
 } power_metrics_t;
 
 typedef struct {

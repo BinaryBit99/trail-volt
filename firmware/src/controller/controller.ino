@@ -1,17 +1,13 @@
 // main.ino
-#include "sensors.h"
 #include "display.h"
 #include "state.h"
-#include "power.h"
+#include "charging.h"
 #include "gpio.h"
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 #include "batteries.h"
 
-battery_status_t battery_status = { 0, 0, 0, 0 };
-charging_status_t charging_status = { 0, 0, 0,0, false, false };
-
-volatile system_state_t system_state = {STATE_MONITORING, battery_status, charging_status};
+volatile system_state_t system_state = {STATE_RECEIVING, NULL, NULL};
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -59,7 +55,7 @@ void loop() {
             break;
         case STATE_RECEIVING:
 
-            // Poll INA for current, voltage, and power readings
+            // Poll power metrics
             update_charging_status(&system_state.charging_status, &ina260);
 
             // Check if cells need passive balancing
@@ -76,7 +72,7 @@ void loop() {
 
             // Next state condition
             if (!is_receiving_charge()) {
-                system_state.mode = STATE_MONITORING;
+                //system_state.mode = STATE_MONITORING;
             }
 
             break;

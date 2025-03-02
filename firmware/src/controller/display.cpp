@@ -192,7 +192,6 @@ void update_display(Adafruit_SH1106G *display, volatile const system_state_t *sy
             display->setCursor(text_start_x, y_pos);
             if (system_state->battery_status.lower_discharging) {
                 display->print("DRAINING LOWER");
-                
             } else if (system_state->battery_status.upper_discharging) {
                 display->print("DRAINING UPPER");
             }

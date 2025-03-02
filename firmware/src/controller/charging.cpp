@@ -1,15 +1,16 @@
 
-/* 
- * File:   power.c
- * Author: Kyle James
- *
- * Created on February 17, 2025, 12:19 PM
- */
-
-#include "power.h"
-#include "sensors.h"
 #include <Arduino.h>
+#include "charging.h"
+#include "gpio.h"
+#include "adc.h"
 
+void update_power_metrics(Adafruit_INA260 *ina260, power_metrics_t *power_metrics) {
+    power_metrics->ina_bus_voltage = ina260->readBusVoltage();
+    power_metrics->ina_current = ina260->readCurrent();
+    power_metrics->ina_power = ina260->readPower();
+    
+    power_metrics->charge_voltage_mv = read_from_adc(CHARGE_VOLTAGE_PIN, CHARGE_VOLTAGE_DIVIDER_RATIO);
+}
 
 uint8_t update_charging_status(charging_status_t *charging_status, const Adafruit_INA260 *ina260) {
 
@@ -52,3 +53,4 @@ void adjust_duty_cycle(const charging_status_t *charging_status) {
 int is_receiving_charge() {
     return 0;
 }
+

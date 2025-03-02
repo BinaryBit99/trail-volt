@@ -1,6 +1,7 @@
 
 #include "batteries.h"
 #include "gpio.h"
+#include "adc.h"
 
 void handle_cell_balancing(battery_status_t *battery_status) {
 
@@ -25,4 +26,16 @@ void handle_cell_balancing(battery_status_t *battery_status) {
         battery_status->upper_discharging = false;
         battery_status->lower_discharging = false;
     }
+}
+
+void update_battery_status(battery_status_t *battery_status) {
+    // Read cell voltages
+    int total_voltage = read_from_adc(TOTAL_CELL_ADC_PIN, TOTAL_CELL_ADC_DIVISION);
+
+    battery_status->lower_cell_voltage_mv = read_from_adc(LOWER_CELL_ADC_PIN, LOWER_CELL_ADC_DIVISION);
+    battery_status->upper_cell_voltage_mv = total_voltage - battery_status->lower_cell_voltage_mv;
+
+    // Read temperatures (no voltage divider)
+    battery_status->cell_1_temperature_c = read_from_adc(CELL1_TEMP_PIN, 1.0);
+    battery_status->cell_2_temperature_c = read_from_adc(CELL2_TEMP_PIN, 1.0);
 }
