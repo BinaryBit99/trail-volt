@@ -42,5 +42,23 @@ typedef struct {
   charging_status_t charging_status;
 } system_state_t;
 
+// Command structures to represent actions to take
+typedef struct {
+    bool should_balance;
+    bool should_discharge_upper;
+    bool should_discharge_lower;
+} battery_command_t;
+
+typedef struct {
+    uint8_t target_duty_cycle;
+    bool should_stop_charging;
+} charging_command_t;
+
+typedef struct {
+    application_mode_t next_mode;
+    battery_command_t battery_cmd;
+    charging_command_t charging_cmd;
+} system_command_t;
+
 #endif	/* STATE_H */
 

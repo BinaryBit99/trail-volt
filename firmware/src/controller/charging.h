@@ -23,21 +23,15 @@
 bool is_receiving_charge();
 
 /**
- * @brief  Updates the global charging status and calculates the appropriate PWM duty cycle.
- * @param  charging_status: A pointer to the global charging status.
- */
-void update_charging_status(charging_status_t *charging_status, const Adafruit_INA260 *ina260);
-
-/**
- * @brief  Configures of MPPT pwm signal.
+ * @brief  Configures the charging pwm signal.
  */
 void init_pwm();
 
 /**
  * @brief  Adjusts the duty cycle based on the charging status provided.
- * @param  charge_status: A pointer to the global charging status.
+ * @param  duty_cycle: The duty cycle.
  */
-void adjust_duty_cycle(const charging_status_t *charging_status);
+void set_charging_duty_cycle(uint8_t duty_cycle);
 
 /**
  * @brief  Reads current from INA260.
@@ -51,7 +45,14 @@ void update_power_metrics(Adafruit_INA260 *ina260, power_metrics_t *power_metric
  * @param  ina260: A pointer to the global INA260 instance.
  * @param  power_metrics: A pointer to the global power metrics.
  */
-void stop_supply_current();
+void stop_charging();
+
+/**
+ * @brief  Calculates the new duty cycle applied to gate driver input.
+ * @param  old_duty_cycle: The duty cycle currently applied to the gate driver.
+ * @return The new calculated PWM duty cycle.
+ */
+uint8_t calculate_duty_cycle(const charging_status_t *status);
 
 #endif	/* CHARGING_H */
 

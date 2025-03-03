@@ -13,16 +13,35 @@
 #define BALANCE_THRESHOLD_V 0.1
 
 /**
- * @brief  Sets GPIO pins fed to cell balancing circuit and sets is_balancing flag.
- * @param  battery_status: A pointer to the current battery status.
+ * @brief  Sets GPIO pin fed to upper cell discharge accordingly.
+ * @param  discharge: True to discharge the cell.
  */
-void balance_cells(battery_status_t *battery_status);
+void set_upper_discharge(bool discharge);
 
 /**
- * @brief  Updates sensor state based on values taken from ADC0.
- * @param  battery_status: A pointer to the global battery status.
-* @return  True is balancing is needed.
+ * @brief  Sets GPIO pin fed to lower cell discharge accordingly.
+ * @param  discharge: True to discharge the cell.
  */
-bool update_battery_status(battery_status_t *battery_status);
+void set_lower_discharge(bool discharge);
+
+/**
+ * @brief  Updates the battery readings based on values taken from ADC0.
+ * @param  battery_status: A pointer to the global battery status.
+ */
+void update_battery_readings(battery_status_t *battery_status);
+
+/**
+ * @brief  Determines whether cell balancing is needed based on the battery status.
+ * @param  status: A pointer to the global battery status.
+ * @return True if balancing is needed.
+ */
+bool is_balancing_needed(const battery_status_t* status);
+
+/**
+ * @brief  Get the voltage difference between the upper cell voltage and the lower cell voltage.
+ * @param  status: A pointer to the global battery status.
+ * @return The difference between the upper and lower cell voltages.
+ */
+float get_cell_voltage_difference(const battery_status_t* status);
 
 #endif	/* BATTERIES_H */

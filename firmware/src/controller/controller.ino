@@ -6,8 +6,9 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 #include "batteries.h"
+#include "state_manager.h"
 
-volatile system_state_t system_state = {STATE_RECEIVING, NULL, NULL};
+#define LOOP_DELAY_MS 10
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -33,70 +34,23 @@ void setup() {
     configure_gpio();
 
     analogReference(DEFAULT);
+
+    state_manager_init();
 }
 
 void loop() {
 
-    // Read battery voltages & thermistor temperatures
-    bool needs_balancing = update_battery_status(&system_state.battery_status);
-
-    // Poll power metrics
-    update_charging_status(&system_state.charging_status, &ina260);
-
-    switch(system_state.mode) {
-        case STATE_MONITORING:
-
-            if (needs_balancing) {
-                system_state.mode = STATE_BALANCING;
-                break;
-            }
-
-            // We only leave monitoring if charging begins
-            if (is_receiving_charge()) {
-                system_state.mode = STATE_RECEIVING;
-            }
-
-            break;
-        case STATE_RECEIVING:
-
-            if (needs_balancing) {
-                system_state.mode = STATE_BALANCING;
-                break;
-            }
-
-            // Adjust the duty cycle based on new power parameters
-            adjust_duty_cycle(system_state.charging_status.duty_cycle_uint8);
-
-            // Next state condition
-            if (!is_receiving_charge()) {
-                system_state.mode = STATE_MONITORING;
-            }
-
-            break;
-        case STATE_BALANCING:
-
-            system_state.charging_status.duty_cycle_uint8 = 0;
-            // Stop charging until batteries are balanced
-            adjust_duty_cycle(&system_state.charging_status);
-            
-            stop_supply_current();
-
-            // Adjust GPIOs according to new battery status
-            balance_cells(&system_state.battery_status);
-
-            if (!needs_balancing) {
-                system_state.mode = STATE_MONITORING;
-            }
-
-            break;
-        case STATE_SLEEP:
-            break;
-        default:
-            system_state.mode = STATE_MONITORING;
-            break;
-
-    }
+    // Updates all the readings from peripherals
+    state_manager_update_sensor_readings(&ina260);
     
-    // Refresh display
-    update_display(&display, &system_state);
+    // Process the current state to determine which commands need to be executed
+    system_command_t cmd = state_manager_process_state();
+    
+    // Apply the commands to update state and control hardware
+    state_manager_apply_command(&cmd);
+    
+    // Update the display with current system state
+    update_display(&display, state_manager_get_state());
+    
+    delay(10);
 }
