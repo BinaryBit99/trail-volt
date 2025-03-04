@@ -9,8 +9,6 @@
 static charging_state_t charging_state;
 static Adafruit_INA260 ina260 = Adafruit_INA260();
 
-uint8_t charging_calculate_duty_cycle(uint8_t current_duty_cycle, float current_charging_voltage_v);
-
 void charging_init() {
     if (!ina260.begin()) {
        Serial.println("Couldn't find INA260");
