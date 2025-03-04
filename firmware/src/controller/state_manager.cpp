@@ -35,6 +35,14 @@ void state_manager_update_mode() {
                 next_mode = MODE_BALANCING;
                 break;
             }
+            if (charging_state.is_faulty) {
+                next_mode = MODE_CHARGING_FAULT;
+            }
+            break;
+        case MODE_CHARGING_FAULT:
+            if (!charging_state.is_faulty) {
+                next_mode = MODE_MONITORING;
+            }
             break;
         case MODE_SUPPLYING:
             if (needs_balancing) {
@@ -86,12 +94,20 @@ void state_manager_apply_hardware_updates() {
             }
             charging_stop();
             break;
-
+        case MODE_CHARGING_FAULT:
+            // Stop charging
+            charging_stop();
+            // Stop discharging (shouldn't be anyways)
+            battery_set_upper_discharge(false);
+            battery_set_lower_discharge(false);
+            break;
         case MODE_RECEIVING:
             battery_set_upper_discharge(false);
             battery_set_lower_discharge(false);
+
             uint8_t new_duty_cycle = charging_calculate_duty_cycle();
             charging_set_duty_cycle(new_duty_cycle);
+
             break;
         case MODE_SUPPLYING:
             battery_set_upper_discharge(false);

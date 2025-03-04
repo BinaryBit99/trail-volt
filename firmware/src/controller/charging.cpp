@@ -28,6 +28,7 @@ void charging_update_state() {
     charging_state.power_metrics.ina_power = ina260.readPower();
     
     charging_state.power_metrics.charge_voltage_v = read_from_adc(CHARGE_VOLTAGE_PIN, CHARGE_VOLTAGE_DIVIDER_RATIO);
+    charging_state.is_faulty = charging_current_within_limits();
 }
 
 uint8_t charging_calculate_duty_cycle() {
@@ -65,6 +66,18 @@ void charging_stop() {
     // Pull shut-down pill low on gate driver
     charging_set_duty_cycle(1);
 
-    charging_state.charging = false;
+    charging_state.is_charging = false;
     return;
+}
+
+bool charging_current_within_limits() {
+    bool in_limits = (charging_state.power_metrics.ina_current < MAX_CHARGE_CURRENT_A) && (charging_state.power_metrics.ina_current > MIN_CHARGE_CURRENT_A );
+
+    if (in_limits) {
+        charging_state.is_faulty = false;
+        return false;
+    } else {
+        charging_state.is_faulty = true;
+        return true;
+    }
 }

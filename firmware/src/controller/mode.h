@@ -4,9 +4,10 @@
 typedef enum {
   MODE_SLEEP,
   MODE_RECEIVING,
+  MODE_CHARGING_FAULT,
   MODE_SUPPLYING,
   MODE_MONITORING,
-  MODE_BALANCING
+  MODE_BALANCING,
 } mode_e;
 
 mode_e get_mode();

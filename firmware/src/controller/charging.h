@@ -7,14 +7,17 @@
 
 #define DUTY_CYCLE_STEP_UINT8 8
 
-#define CHARGE_VOLTAGE_DIVIDER_RATIO 1.7
+#define CHARGE_VOLTAGE_DIVIDER_RATIO 1.7f
 
 /**
  * The acceptable difference between CHARGING_VOLTAGE_V and our current charging.
  */
-#define CHARING_VOLTAGE_TOLERANCE 0.050
+#define CHARING_VOLTAGE_TOLERANCE 0.050f
 
-#define CHARGING_VOLTAGE_V 8.2
+#define CHARGING_VOLTAGE_V 8.2f
+
+#define MIN_CHARGE_CURRENT_A 0.5f
+#define MAX_CHARGE_CURRENT_A 2.0f
 
 typedef struct {
   float ina_current;
@@ -24,8 +27,8 @@ typedef struct {
 } power_metrics_t;
 
 typedef struct {
-  bool charging;
-  bool power_is_increasing;
+  bool is_charging;
+  bool is_faulty;
   uint8_t duty_cycle_uint8;
   power_metrics_t power_metrics;
 } charging_state_t;
@@ -68,6 +71,12 @@ void charging_stop();
  * @return The new calculated PWM duty cycle.
  */
 uint8_t charging_calculate_duty_cycle();
+
+/**
+ * @brief  Determines whether the charging current is within the allowable limits.
+ * @return True if within the allowable limits.
+ */
+bool charging_current_within_limits();
 
 #endif	/* CHARGING_H */
 
