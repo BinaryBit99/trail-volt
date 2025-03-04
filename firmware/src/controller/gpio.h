@@ -16,6 +16,9 @@ const int LOWER_CELL_DISCHARGE_PIN = PD2;
 const int UPPER_CELL_DISCHARGE_PIN = PD4;
 // A4 & A5 are used for I2C  
 
-void configure_gpio();
+/**
+ * @brief  Initializes GPIO pins.
+ */
+void gpio_init();
 
 #endif /* GPIO_H */

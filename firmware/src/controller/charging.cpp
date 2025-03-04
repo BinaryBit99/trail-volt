@@ -4,25 +4,40 @@
 #include "gpio.h"
 #include "adc.h"
 #include <math.h>
+#include <Adafruit_INA260.h>
 
-uint8_t calculate_duty_cycle(uint8_t current_duty_cycle, float current_charging_voltage_v);
+static charging_state_t charging_state;
+static Adafruit_INA260 ina260 = Adafruit_INA260();
 
-void update_power_metrics(Adafruit_INA260 *ina260, power_metrics_t *power_metrics) {
-    power_metrics->ina_bus_voltage = ina260->readBusVoltage();
-    power_metrics->ina_current = ina260->readCurrent();
-    power_metrics->ina_power = ina260->readPower();
-    
-    power_metrics->charge_voltage_v = read_from_adc(CHARGE_VOLTAGE_PIN, CHARGE_VOLTAGE_DIVIDER_RATIO);
+uint8_t charging_calculate_duty_cycle(uint8_t current_duty_cycle, float current_charging_voltage_v);
+
+void charging_init() {
+    if (!ina260.begin()) {
+       Serial.println("Couldn't find INA260");
+       //while (1);
+    }
 }
 
-uint8_t calculate_duty_cycle(const charging_status_t *status) {
-    uint8_t current_duty_cycle = status->duty_cycle_uint8;
-    float current_charging_voltage_v = status->power_metrics.charge_voltage_v;
+charging_state_t charging_get_state() {
+    return charging_state;
+}
+
+void charging_update_state() {
+    charging_state.power_metrics.ina_bus_voltage = ina260.readBusVoltage();
+    charging_state.power_metrics.ina_current = ina260.readCurrent();
+    charging_state.power_metrics.ina_power = ina260.readPower();
+    
+    charging_state.power_metrics.charge_voltage_v = read_from_adc(CHARGE_VOLTAGE_PIN, CHARGE_VOLTAGE_DIVIDER_RATIO);
+}
+
+uint8_t charging_calculate_duty_cycle() {
+    uint8_t current_duty_cycle = charging_state.duty_cycle_uint8;
+    float current_charging_voltage_v = charging_state.power_metrics.charge_voltage_v;
     
     float voltage_overshoot = current_charging_voltage_v - CHARGING_VOLTAGE_V;
 
     // If we are within the tolerance, keep the same duty cycle
-    if (fabs(voltage_overshoot) < CHARING_VOLTAGE_TOLERANCE) {
+    if (fabsf(voltage_overshoot) < CHARING_VOLTAGE_TOLERANCE) {
         return current_duty_cycle;
     }
 
@@ -35,16 +50,21 @@ uint8_t calculate_duty_cycle(const charging_status_t *status) {
     }
 }
 
-void set_charging_duty_cycle(uint8_t duty_cycle) {
+void charging_set_duty_cycle(uint8_t duty_cycle) {
     uint8_t sanitized_duty_cycle = constrain(duty_cycle, 0, 255);
     analogWrite(PWM_PIN, sanitized_duty_cycle);
+    charging_state.duty_cycle_uint8 = sanitized_duty_cycle;
 }
 
 bool is_receiving_charge() {
     return true;
 }
 
+void charging_stop() {
 
-void stop_charging() {
+    // Pull shut-down pill low on gate driver
+    charging_set_duty_cycle(1);
+
+    charging_state.charging = false;
     return;
 }

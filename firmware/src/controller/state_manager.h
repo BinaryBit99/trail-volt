@@ -2,7 +2,6 @@
 #ifndef STATE_MANAGER_H
 #define STATE_MANAGER_H
 
-#include "state.h"
 #include <Adafruit_INA260.h>
 
 /**
@@ -11,26 +10,18 @@
 void state_manager_init();
 
 /**
- * @brief  Get the read-only pointer to the system state.
- * @return The read-only pointer to the system state.
+ * @brief  Reads all sensor data and updates the system state.
  */
-const system_state_t* state_manager_get_state();
+void state_manager_update_sensors();
 
 /**
- * @brief  Updates the system sensor readings.
- * @param  ina260: A read-only pointer to the INA260 instance.
+ * @brief  Updates next FSM state based on sensor readings.
  */
-void state_manager_update_sensor_readings(const Adafruit_INA260 *ina260);
+void state_manager_update_mode();
 
 /**
- * @brief  Processes the current system state.
- * @return The commands to be executed based on the system state.
+ * @brief  Applies updates to the hardware based on the current system state.
  */
-system_command_t state_manager_process_state();
-
-/**
- * @brief  Applies the command to update system state or control hardware.
- */
-void state_manager_apply_command(const system_command_t* cmd);
+void state_manager_apply_hardware_updates();
 
 #endif /* STATE_MANAGER_H */
