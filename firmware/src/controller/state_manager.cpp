@@ -84,6 +84,8 @@ void state_manager_apply_hardware_updates() {
 
     switch (current_mode) {
         case MODE_BALANCING: 
+            // Don't charge while balancing
+            charging_stop();
             // Determine which cell to balance
             if (battery_state.upper_cell_voltage_v - battery_state.lower_cell_voltage_v > 0) {
                 battery_set_upper_discharge(true);
@@ -92,7 +94,6 @@ void state_manager_apply_hardware_updates() {
                 battery_set_upper_discharge(false);
                 battery_set_lower_discharge(true);
             }
-            charging_stop();
             break;
         case MODE_CHARGING_FAULT:
             // Stop charging
