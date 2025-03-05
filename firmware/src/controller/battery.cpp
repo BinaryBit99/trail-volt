@@ -39,9 +39,6 @@ void battery_update_state() {
     // Read temperatures (no voltage divider)
     battery_state.cell_1_temperature_c = read_from_adc(CELL1_TEMP_PIN, 1.0);
     battery_state.cell_2_temperature_c = read_from_adc(CELL2_TEMP_PIN, 1.0);
-
-    float upper_cell_v = battery_state.upper_cell_voltage_v;
-    float lower_cell_v = battery_state.lower_cell_voltage_v;
 }
 
 float get_cell_voltage_difference() {
