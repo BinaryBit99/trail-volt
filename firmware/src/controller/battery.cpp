@@ -15,7 +15,7 @@ void battery_set_upper_discharge(bool discharge) {
         battery_state.upper_discharging = true;
     } else {
         digitalWrite(UPPER_CELL_DISCHARGE_PIN, LOW);
-        battery_state.lower_discharging = false;
+        battery_state.upper_discharging = false;
     }
 }
 
@@ -25,7 +25,7 @@ void battery_set_lower_discharge(bool discharge) {
         battery_state.lower_discharging = true;
     } else {
         digitalWrite(LOWER_CELL_DISCHARGE_PIN, LOW);
-        battery_state.upper_discharging = false;
+        battery_state.lower_discharging = false;
     }
 }
 
