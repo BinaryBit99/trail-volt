@@ -78,6 +78,11 @@ void state_manager_update_mode() {
  * @brief  Applies updates to the hardware based on the current system state.
  */
 void state_manager_apply_hardware_updates() {
+    /*
+     * This function is not responsible for checking whether the current state
+     * is accurate, but only for reflecting this current state through hardware updates.
+     */
+    
     battery_state_t battery_state = battery_get_state();
     charging_state_t charging_state = charging_get_state();
     mode_e current_mode = get_mode();
