@@ -8,7 +8,7 @@
 #define PWM_PIN 9              // PWM output pin (D9)
 #define MAX_DUTY 255           // Max duty cycle (8-bit)
 #define MIN_DUTY 0             // Min duty cycle
-#define DUTY_STEP 5            // Perturbation step size
+//#define DUTY_STEP 5            // Perturbation step size        -- This is what we will be varying! as a function of error;
 #define SAMPLE_TIME 100        // Control loop interval (ms)
 
 #define MIN_ERROR 1e-1        // min error is 0.1
@@ -17,6 +17,7 @@
 
 // Variables
 float pv_voltage, pv_current, pv_power;
+float DUTY_STEP;                          // This will vary as a function of the error logarithmically.
 float load_current, load_power;
 float prev_pv_power = 0;
 int duty_cycle = 0;            // Initial duty cycle
@@ -36,7 +37,7 @@ void loop() {
   static unsigned long last_time = 0;
   unsigned long now = millis();
   
-  if (now - last_time >= SAMPLE_TIME) {
+  if (now - last_time >= SAMPLE_TIME) {    // this dictates how often we are updating things...
     // Read PV voltage and current
     pv_voltage = readINA260Voltage(INA260_PV_ADDR);
     pv_current = readINA260Current(INA260_PV_ADDR);
