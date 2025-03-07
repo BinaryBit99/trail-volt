@@ -1,17 +1,17 @@
-
 #include <Arduino.h>
 #include "charging.h"
 #include "gpio.h"
 #include "adc.h"
 #include <math.h>
 #include <Adafruit_INA260.h>
+#include "debug.h"
 
 static charging_state_t charging_state;
 static Adafruit_INA260 ina260 = Adafruit_INA260();
 
 void charging_init() {
     if (!ina260.begin()) {
-       Serial.println("Couldn't find INA260");
+       D_printlnf("Couldn't find INA260");
        //while (1);
     }
 }
@@ -60,9 +60,10 @@ bool is_receiving_charge() {
 }
 
 void charging_stop() {
+    // Pull shut-down pin low on gate driver
 
-    // Pull shut-down pill low on gate driver
-    charging_set_duty_cycle(1);
+    // As an extra step, set duty cycle to 0
+    charging_set_duty_cycle(0);
 
     charging_state.is_charging = false;
     return;

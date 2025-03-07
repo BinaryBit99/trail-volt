@@ -5,6 +5,7 @@
 #include "Fonts/GFX_fonts/Font5x5Fixed.h"
 #include "Fonts/GFX_fonts/Font5x7FixedMono.h"
 #include "Fonts/FreeSansBold6pt7b.h"
+#include "debug.h"
 
 static Adafruit_SH1106G display = Adafruit_SH1106G(DISP_WIDTH, DISP_HEIGHT, &Wire, OLED_RESET);
 
@@ -62,7 +63,7 @@ void display_draw_logo() {
 void display_init() {
     // Initialize the display
     if (!display.begin(i2c_address, true)) {
-        Serial.println("SH1106 allocation failed");
+        D_printlnf("SH1106 allocation failed");
         for (;;); // Don't proceed, loop forever
     }
 

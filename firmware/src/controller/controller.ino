@@ -1,3 +1,5 @@
+/* Setting DEBUG to 1 enables serial logging. */
+#include "debug.h"
 
 #include "display.h"
 #include "mode.h"
@@ -11,8 +13,8 @@
 #define LOOP_DELAY_MS 10
 
 void setup() {
-    Serial.begin(19200);
-    Serial.println("Starting.");
+    D_SerialBegin(9600);
+    D_printlnf("Starting.");
     
     display_init();
     display_draw_logo();

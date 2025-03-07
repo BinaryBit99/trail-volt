@@ -1,9 +1,10 @@
-
 #include "state_manager.h"
 #include "battery.h"
 #include "charging.h"
 #include "gpio.h"
 #include "mode.h"
+#include "debug.h"
+
 
 void state_manager_init() {
     charging_init();
@@ -69,6 +70,11 @@ void state_manager_update_mode() {
         default:
             next_mode = MODE_MONITORING;
             break;
+    }
+
+    if (next_mode != current_mode) {
+        // For the purpose of debugging
+        D_printf("Mode switched to: "); D_println(next_mode);
     }
 
     set_mode(next_mode);   
