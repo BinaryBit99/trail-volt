@@ -5,7 +5,7 @@
 #include "mode.h"
 
 
-#define DUTY_CYCLE_STEP_UINT8 1
+//#define DUTY_CYCLE_STEP_UINT8 1    comment this out so that we can make it a variable in charging.cpp instead.
 
 // App Voltage = ADC reading * CHARGE_VOLTAGE_DIVIDER_RATIO
 #define CHARGE_VOLTAGE_DIVIDER_RATIO 3.925f
