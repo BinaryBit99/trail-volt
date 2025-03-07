@@ -5,14 +5,15 @@
 #include "mode.h"
 
 
-#define DUTY_CYCLE_STEP_UINT8 8
+#define DUTY_CYCLE_STEP_UINT8 1
 
-#define CHARGE_VOLTAGE_DIVIDER_RATIO 1.7f
+// App Voltage = ADC reading * CHARGE_VOLTAGE_DIVIDER_RATIO
+#define CHARGE_VOLTAGE_DIVIDER_RATIO 3.925f
 
 /**
  * The acceptable difference between CHARGING_VOLTAGE_V and our current charging.
  */
-#define CHARING_VOLTAGE_TOLERANCE 0.050f
+#define CHARING_VOLTAGE_TOLERANCE 0.10f
 
 #define CHARGING_VOLTAGE_V 8.2f
 

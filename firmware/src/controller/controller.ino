@@ -8,7 +8,7 @@
 #include "battery.h"
 #include "state_manager.h"
 
-#define LOOP_DELAY_MS 0
+#define LOOP_DELAY_MS 10
 
 void setup() {
     Serial.begin(19200);
