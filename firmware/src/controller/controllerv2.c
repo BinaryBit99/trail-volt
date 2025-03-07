@@ -11,14 +11,11 @@
 //#define DUTY_STEP 5            // Perturbation step size        -- This is what we will be varying! as a function of error;
 #define SAMPLE_TIME 100        // Control loop interval (ms)
 
-#define MIN_ERROR 1e-1        // min error is 0.1
-#define CRITICAL M_U
+
 
 
 // Variables
-float alpha = 0; // set alpha to zero by default.
-float critical = 1.0;    // our 'expectation' variable
-int K = 0.5;  // scaling
+
 float pv_voltage, pv_current, pv_power;
 float DUTY_STEP;                          // This will vary as a function of the error logarithmically.
 float load_current, load_power;
