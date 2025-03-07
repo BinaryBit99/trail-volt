@@ -2,7 +2,7 @@
 #include "gpio.h"
 #include <Arduino.h>
 
-void configure_gpio() {
+void gpio_init() {
     pinMode(PWM_PIN, OUTPUT);
     pinMode(TOTAL_CELL_ADC_PIN, INPUT);
     pinMode(LOWER_CELL_ADC_PIN, INPUT);
@@ -10,5 +10,4 @@ void configure_gpio() {
     pinMode(CELL2_TEMP_PIN, INPUT);
     pinMode(LOWER_CELL_DISCHARGE_PIN, OUTPUT);
     pinMode(UPPER_CELL_DISCHARGE_PIN, OUTPUT);
-    
 }
