@@ -13,9 +13,12 @@
 
 #define MIN_ERROR 1e-1        // min error is 0.1
 #define CRITICAL M_U
-#define K 0.5
+
 
 // Variables
+float alpha = 0; // set alpha to zero by default.
+float critical = 1.0;    // our 'expectation' variable
+int K = 0.5;  // scaling
 float pv_voltage, pv_current, pv_power;
 float DUTY_STEP;                          // This will vary as a function of the error logarithmically.
 float load_current, load_power;
