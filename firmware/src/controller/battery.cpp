@@ -41,12 +41,12 @@ void battery_update_state() {
     battery_state.cell_2_temperature_c = read_from_adc(CELL2_TEMP_PIN, 1.0);
 }
 
-float get_cell_voltage_difference() {
+float battery_get_voltage_difference() {
     return fabsf(battery_state.upper_cell_voltage_v - battery_state.lower_cell_voltage_v);
 }
 
 bool battery_balancing_needed() {
-    float voltage_diff = get_cell_voltage_difference();
+    float voltage_diff = battery_get_voltage_difference();
     return (voltage_diff > BALANCE_THRESHOLD_V);
 }
 
