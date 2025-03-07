@@ -1,4 +1,6 @@
 #include <Wire.h>
+#include <math.h>
+#include <stdio.h>
 
 // Constants
 #define INA260_PV_ADDR 0x40    // INA260 for PV (current/voltage)
@@ -8,6 +10,10 @@
 #define MIN_DUTY 0             // Min duty cycle
 #define DUTY_STEP 5            // Perturbation step size
 #define SAMPLE_TIME 100        // Control loop interval (ms)
+
+#define MIN_ERROR 1e-1        // min error is 0.1
+#define CRITICAL M_U
+#define K 0.5
 
 // Variables
 float pv_voltage, pv_current, pv_power;
