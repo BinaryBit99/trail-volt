@@ -38,6 +38,11 @@ void state_manager_update_mode() {
             }
             if (charging_state.is_faulty) {
                 next_mode = MODE_CHARGING_FAULT;
+                break;
+            }
+            if (!is_receiving_charge()) {
+                next_mode = MODE_MONITORING;
+                break;
             }
             break;
         case MODE_CHARGING_FAULT:
@@ -56,7 +61,7 @@ void state_manager_update_mode() {
                 next_mode = MODE_BALANCING;
                 break;
             }
-            if (is_receiving_charge) {
+            if (is_receiving_charge()) {
                 next_mode = MODE_RECEIVING;
                 break;
             }
