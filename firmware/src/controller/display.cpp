@@ -166,14 +166,14 @@ void display_update() {
             display.setFont(&Font5x5Fixed);
             y_pos += line_height;
 
-            // Total voltage
-            
+            // Total cell voltage
             display.setCursor(text_start_x, y_pos);
             display.print("V-BAT: ");
             display.print(total_voltage, 2);  // Print average voltage with 2 decimal places
             display.print("V");
             y_pos += line_height;
 
+            // Supply voltage as seen by the batteries
             display.setCursor(text_start_x, y_pos);
             display.print("V-SUP.: ");
             display.print(charging_state.power_metrics.charge_voltage_v, 2);  // Print average voltage with 2 decimal places
@@ -211,8 +211,8 @@ void display_update() {
             y_pos += line_height;
 
             display.setCursor(text_start_x, y_pos);
-            display.print("V-SUP.: ");
-            display.print(charging_state.power_metrics.charge_voltage_v, 2);  // Print average voltage with 2 decimal places
+            display.print(F("CELL-DIFF: "));
+            display.print(battery_get_voltage_difference(), 2);  // Print average voltage with 2 decimal places
             display.print("V");
             y_pos += line_height;
 
@@ -231,12 +231,18 @@ void display_update() {
             y_pos += line_height;
 
             break;
+        case MODE_CHARGING_FAULT:
+            display.setFont(&FreeSansBold6pt7b);
+            display.setCursor(text_start_x, y_pos);
+            display.print("FAULT");
+            display.setFont(&Font5x5Fixed);
+            y_pos += line_height;
+            break;
         case MODE_MONITORING:
 
             display.setFont(&FreeSansBold6pt7b);
             display.setCursor(text_start_x, y_pos);
             display.print("MONITORING");
-            display.setTextSize(1);
             display.setFont(&Font5x5Fixed);
             y_pos += line_height;
 

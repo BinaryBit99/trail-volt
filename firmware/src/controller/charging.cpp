@@ -70,5 +70,10 @@ void charging_stop() {
 
 bool charging_current_within_limits() {
     bool in_limits = (charging_state.power_metrics.ina_current < MAX_CHARGE_CURRENT_A) && (charging_state.power_metrics.ina_current > MIN_CHARGE_CURRENT_A );
-    return in_limits;
+
+    /*
+     * Since our hardware is not yet setup for determining current values, return true.
+     */
+
+    return true;
 }
