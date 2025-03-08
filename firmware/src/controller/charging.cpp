@@ -11,8 +11,10 @@ static Adafruit_INA260 ina260 = Adafruit_INA260();
 
 void charging_init() {
     if (!ina260.begin()) {
-       D_printlnf("Couldn't find INA260");
-       //while (1);
+        D_printlnf("Couldn't find INA260");
+        //while (1);
+    } else {
+        D_printlnf("Found INA260");
     }
 }
 
@@ -21,10 +23,10 @@ charging_state_t charging_get_state() {
 }
 
 void charging_update_state() {
-    charging_state.power_metrics.ina_bus_voltage = ina260.readBusVoltage();
-    charging_state.power_metrics.ina_current = ina260.readCurrent();
-    charging_state.power_metrics.ina_power = ina260.readPower();
-    
+    charging_state.power_metrics.ina_bus_voltage_v = ina260.readBusVoltage() / (float)1000;
+    charging_state.power_metrics.ina_current_ma = ina260.readCurrent();
+    charging_state.power_metrics.ina_power_w = ina260.readPower() / (float)1000;
+
     charging_state.power_metrics.charge_voltage_v = read_from_adc(CHARGE_VOLTAGE_PIN, CHARGE_VOLTAGE_DIVIDER_RATIO);
     charging_state.is_faulty = !charging_current_within_limits();
 }
@@ -70,7 +72,7 @@ void charging_stop() {
 }
 
 bool charging_current_within_limits() {
-    bool in_limits = (charging_state.power_metrics.ina_current < MAX_CHARGE_CURRENT_A) && (charging_state.power_metrics.ina_current > MIN_CHARGE_CURRENT_A );
+    bool in_limits = (charging_state.power_metrics.ina_current_ma < MAX_CHARGE_CURRENT_A) && (charging_state.power_metrics.ina_current_ma > MIN_CHARGE_CURRENT_A );
 
     /*
      * Since our hardware is not yet setup for determining current values, return true.

@@ -69,10 +69,8 @@ void display_init() {
 
     // Clear the buffer
     display.clearDisplay();
-    display.display();
 
     // Set the font
-    display.setTextSize(1);
     display.setFont(&Font5x5Fixed);
     display.setTextColor(SH110X_WHITE);
     display.setRotation(0);
@@ -174,11 +172,26 @@ void display_update() {
             display.print("V");
             y_pos += line_height;
 
-            // Supply voltage as seen by the batteries
+            // Supply voltage as seen by the batteries taken from ADC
             display.setCursor(text_start_x, y_pos);
-            display.print("V-SUP.: ");
+            display.print("V-SUP-1: ");
             display.print(charging_state.power_metrics.charge_voltage_v, 2);  // Print average voltage with 2 decimal places
             display.print("V");
+            y_pos += line_height;
+
+
+            // Supply voltage as seen by the batteries taken from INA
+            display.setCursor(text_start_x, y_pos);
+            display.print("V-SUP-2: ");
+            display.print(charging_state.power_metrics.ina_bus_voltage_v, 2);  // Print average voltage with 2 decimal places
+            display.print("V");
+            y_pos += line_height;
+
+            // Supply current as seen by the batteries
+            display.setCursor(text_start_x, y_pos);
+            display.print("A-SUP: ");
+            display.print(charging_state.power_metrics.ina_current_ma, 2);  // Print average voltage with 2 decimal places
+            display.print("mA");
             y_pos += line_height;
 
             display.setCursor(text_start_x, y_pos);

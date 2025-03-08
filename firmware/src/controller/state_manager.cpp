@@ -7,7 +7,6 @@
 
 
 void state_manager_init() {
-    charging_init();
     set_mode(MODE_MONITORING);
 }
 
@@ -79,7 +78,7 @@ void state_manager_update_mode() {
 
     if (next_mode != current_mode) {
         // For the purpose of debugging
-        D_printf("Mode switched to: "); D_println(next_mode);
+        D_printf("Mode switched to: "); //D_println(next_mode);
     }
 
     set_mode(next_mode);   
@@ -127,10 +126,12 @@ void state_manager_apply_hardware_updates() {
 
             break;
         case MODE_SUPPLYING:
+            charging_stop();
             battery_set_upper_discharge(false);
             battery_set_lower_discharge(false);
             break;
         case MODE_MONITORING:
+            charging_stop();
             battery_set_upper_discharge(false);
             battery_set_lower_discharge(false);
             break;

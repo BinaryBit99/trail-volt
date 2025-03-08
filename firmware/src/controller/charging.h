@@ -21,9 +21,9 @@
 #define MAX_CHARGE_CURRENT_A 2.0f
 
 typedef struct {
-  float ina_current;
-  float ina_bus_voltage;
-  float ina_power;
+  float ina_current_ma;
+  float ina_bus_voltage_v;
+  float ina_power_w;
   float charge_voltage_v;
 } power_metrics_t;
 

@@ -14,14 +14,16 @@
 
 void setup() {
     D_SerialBegin(9600);
+    delay(1000);
     D_printlnf("Starting.");
-    
+
+    gpio_init();
+    charging_init();
+    state_manager_init();
+
     display_init();
     display_draw_logo();
     delay(2500);
-
-    gpio_init();
-    state_manager_init();
 }
 
 void loop() {
