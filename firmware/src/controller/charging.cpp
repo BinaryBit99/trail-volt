@@ -71,8 +71,18 @@ bool is_receiving_charge() {
     return true;
 }
 
+void charging_set_shutdown_pin(bool shutdown) {
+    if (shutdown) {
+        pinMode(CHARGING_SHUT_DOWN_PIN, OUTPUT);
+        digitalWrite(CHARGING_SHUT_DOWN_PIN, LOW);
+    } else {
+        pinMode(CHARGING_SHUT_DOWN_PIN, INPUT_PULLUP);
+    }
+}
+
 void charging_stop() {
     // Pull shut-down pin low on gate driver
+    charging_set_shutdown_pin(true);
 
     // As an extra step, set duty cycle to 0
     charging_set_duty_cycle(0);

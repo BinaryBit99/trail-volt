@@ -10,4 +10,7 @@ void gpio_init() {
     pinMode(CELL2_TEMP_PIN, INPUT);
     pinMode(LOWER_CELL_DISCHARGE_PIN, OUTPUT);
     pinMode(UPPER_CELL_DISCHARGE_PIN, OUTPUT);
+
+    // Keep pin high by default (shutdown off)
+    pinMode(CHARGING_SHUT_DOWN_PIN, INPUT_PULLUP);
 }
