@@ -6,6 +6,8 @@
 #include <Adafruit_INA260.h>
 #include "debug.h"
 
+#define K 1  // Constant for scaling.
+
 static charging_state_t charging_state;
 static Adafruit_INA260 ina260 = Adafruit_INA260();
 
@@ -35,19 +37,27 @@ uint8_t charging_calculate_duty_cycle() {
     uint8_t current_duty_cycle = charging_state.duty_cycle_uint8;
     float current_charging_voltage_v = charging_state.power_metrics.ina_bus_voltage_v;
     
+    float critical = 1;        // try critical with 1 for now.
+
     float voltage_overshoot = current_charging_voltage_v - CHARGING_VOLTAGE_V;
+    float error = fabs(voltage_overshoot);
 
     // If we are within the tolerance, keep the same duty cycle
     if (fabsf(voltage_overshoot) < CHARING_VOLTAGE_TOLERANCE) {
         return current_duty_cycle;
     }
 
+    float alpha = 1.0 + (K * log(error / critical));        // by default log function uses base e
+    if(alpha < 0) {        // clamp alpha to zero, if alpha <0
+        alpha = 0;
+    }
+    float duty_cycle_step_uint8 = pow(error,alpha) + 1.0;
     if (voltage_overshoot > 0) {
         // Decrease duty cycle -> decrease voltage
-        return constrain(current_duty_cycle - DUTY_CYCLE_STEP_UINT8, 0, 255);
+        return constrain(current_duty_cycle - duty_cycle_step_uint8, 0, 255);
     } else {
         // Increase duty cycle -> increase voltage
-        return constrain(current_duty_cycle + DUTY_CYCLE_STEP_UINT8, 0, 255);
+        return constrain(current_duty_cycle + duty_cycle_step_uint8, 0, 255);
     }
 }
 
