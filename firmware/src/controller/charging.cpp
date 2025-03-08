@@ -33,7 +33,7 @@ void charging_update_state() {
 
 uint8_t charging_calculate_duty_cycle() {
     uint8_t current_duty_cycle = charging_state.duty_cycle_uint8;
-    float current_charging_voltage_v = charging_state.power_metrics.charge_voltage_v;
+    float current_charging_voltage_v = charging_state.power_metrics.ina_bus_voltage_v;
     
     float voltage_overshoot = current_charging_voltage_v - CHARGING_VOLTAGE_V;
 
