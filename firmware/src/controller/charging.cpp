@@ -6,7 +6,7 @@
 #include <Adafruit_INA260.h>
 #include "debug.h"
 
-#define K 1;  // Constant for scaling.
+#define K 1  // Constant for scaling.
 
 static charging_state_t charging_state;
 static Adafruit_INA260 ina260 = Adafruit_INA260();
@@ -18,7 +18,6 @@ float critical = 1;        // try critical with 1 for now.
 void charging_init() {
     if (!ina260.begin()) {
        D_printlnf("Couldn't find INA260");
-       //while (1);
     }
 }
 
