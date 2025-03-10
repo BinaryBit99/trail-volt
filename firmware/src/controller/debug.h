@@ -1,3 +1,6 @@
+#ifndef DEBUG_H
+#define	DEBUG_H
+
 #define DEBUG 0
 
 #if DEBUG
@@ -15,3 +18,4 @@
 #define D_printf(x)
 #define D_printlnf(x)
 #endif
+#endif /* DEBUG_H */

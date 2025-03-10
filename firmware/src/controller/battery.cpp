@@ -2,6 +2,7 @@
 #include "gpio.h"
 #include "adc.h"
 #include <math.h>
+#include "temperature.h"
 
 static battery_state_t battery_state;
 
@@ -37,8 +38,8 @@ void battery_update_state() {
     battery_state.upper_cell_voltage_v = total_voltage - battery_state.lower_cell_voltage_v;
 
     // Read temperatures (no voltage divider)
-    battery_state.cell_1_temperature_c = read_from_adc(CELL1_TEMP_PIN, 1.0);
-    battery_state.cell_2_temperature_c = read_from_adc(CELL2_TEMP_PIN, 1.0);
+    battery_state.upper_cell_temperature_c = temperature_get_upper_cell();
+    battery_state.lower_cell_temperature_c = temperature_get_lower_cell();
 }
 
 float battery_get_voltage_difference() {

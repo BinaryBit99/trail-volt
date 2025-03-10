@@ -8,8 +8,8 @@
 
 const int TOTAL_CELL_ADC_PIN = A0;
 const int LOWER_CELL_ADC_PIN = A1;
-const int CELL1_TEMP_PIN = A2;     
-const int CELL2_TEMP_PIN = A3;
+const int UPPER_CELL_TEMP_PIN = A2;     
+const int LOWER_CELL_TEMP_PIN = A3;
 // A4 & A5 are used for I2C  
 
 /* A6 not functional on current board */
