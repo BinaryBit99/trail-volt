@@ -1,6 +1,8 @@
 #include "temperature.h"
 #include "adc.h"
 
+#include <math.h>
+#include <stdint.h>
 
 #define ADC_MAX   1023.0f   // Arduino Nano has a 10-bit ADC (0-1023)
 
