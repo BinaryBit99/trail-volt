@@ -53,7 +53,7 @@ float getTempfromThermistor(int pin) {
     if (adc_value <= 0 || adc_value >= ADC_MAX) return -999.0f; // Use this right away to maintain 'safe' bounds - can adjust if needed. I set ADC_MAX to 5.
 
     // Use a Steinhart equation for conversions.
-    float steinhart = (1.0f / T0) + (1.0f / BETA) * log(r_ntc / R0);
+    float steinhart = (1.0f / T0) + (1.0f / Beta) * log(r_ntc / R0);
     float t_kelvin = 1.0f / steinhart;
     float t_celsius = t_kelvin - 273.15f;
     
