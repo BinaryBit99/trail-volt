@@ -63,3 +63,16 @@ float getTempfromThermistor(int pin) {
 
 }
 
+void testTemperature(float t_celsius){
+    int lowerBound = 15;
+    int higherBound = 40;
+    if(t_celsius > lowerBound && u32_tempK < t_celsius){
+        PORTA.OUT |= 0x01;
+    }
+    else{
+        PORTA.OUT &= ~(0x01);
+    }
+}
+
+
+
