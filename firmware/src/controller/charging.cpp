@@ -14,7 +14,7 @@ static Adafruit_INA260 ina260 = Adafruit_INA260();
 void charging_init() {
     if (!ina260.begin()) {
         D_printlnf("Couldn't find INA260");
-        //while (1);
+        while (1);
     } else {
         D_printlnf("Found INA260");
     }
