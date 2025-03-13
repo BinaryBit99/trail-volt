@@ -10,7 +10,12 @@
 /**
  * The acceptable difference between CHARGING_VOLTAGE_V and our current charging.
  */
-#define CHARING_VOLTAGE_TOLERANCE 0.10f
+#define CHARING_VOLTAGE_TOLERANCE 0.050f
+
+/*
+ * At this error value, set the pwm step to minimum.
+ */
+#define SLOW_STEP_THESHOLD_V 1.00f
 
 #define CHARGING_VOLTAGE_V 8.2f
 

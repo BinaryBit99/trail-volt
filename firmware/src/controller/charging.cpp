@@ -52,6 +52,12 @@ uint8_t charging_calculate_duty_cycle() {
         alpha = 0;
     }
     float duty_cycle_step_uint8 = pow(error,alpha) + 1.0;
+
+    // Ensure duty cycle step converges to minimum value at certain threshold
+    if (error < SLOW_STEP_THESHOLD_V) {
+        duty_cycle_step_uint8 = 1;
+    }    
+
     if (voltage_overshoot > 0) {
         // Decrease duty cycle -> decrease voltage
         return constrain(current_duty_cycle - duty_cycle_step_uint8, 0, 255);
