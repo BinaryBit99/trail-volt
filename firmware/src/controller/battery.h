@@ -15,8 +15,8 @@
 typedef struct {
     float upper_cell_voltage_v;
     float lower_cell_voltage_v;
-    float upper_cell_temperature_c;
-    float lower_cell_temperature_c;
+    float ground_temperature_c;
+    float series_temperature_c;
     bool upper_discharging;
     bool lower_discharging;
 } battery_state_t;

@@ -3,14 +3,21 @@
 #include <Arduino.h>
 
 void gpio_init() {
-    pinMode(PWM_PIN, OUTPUT);
+    pinMode(THERMISTOR_1_PIN, INPUT);
+    pinMode(THERMISTOR_2_PIN, INPUT);
+
     pinMode(TOTAL_CELL_ADC_PIN, INPUT);
     pinMode(LOWER_CELL_ADC_PIN, INPUT);
-    pinMode(UPPER_CELL_TEMP_PIN, INPUT);
-    pinMode(LOWER_CELL_TEMP_PIN, INPUT);
-    pinMode(LOWER_CELL_DISCHARGE_PIN, OUTPUT);
-    pinMode(UPPER_CELL_DISCHARGE_PIN, OUTPUT);
+
+    pinMode(SWITCH_1_PIN, INPUT);
 
     // Keep pin high by default (shutdown off)
-    pinMode(CHARGING_SHUT_DOWN_PIN, INPUT_PULLUP);
+    pinMode(H_BRIDGE_SHUT_DOWN_PIN_AL, INPUT_PULLUP);
+
+    pinMode(USB_ENABLE_PIN, OUTPUT);
+
+    pinMode(C1_BALANCING_PIN, OUTPUT);
+    pinMode(C2_BALANCING_PIN, OUTPUT);
+
+    pinMode(CHARGE_PWM_PIN, OUTPUT);
 }

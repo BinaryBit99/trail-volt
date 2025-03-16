@@ -69,7 +69,7 @@ uint8_t charging_calculate_duty_cycle() {
 
 void charging_set_duty_cycle(uint8_t duty_cycle) {
     uint8_t sanitized_duty_cycle = constrain(duty_cycle, 0, 255);
-    analogWrite(PWM_PIN, sanitized_duty_cycle);
+    analogWrite(CHARGE_PWM_PIN, sanitized_duty_cycle);
     charging_state.duty_cycle_uint8 = sanitized_duty_cycle;
 }
 
@@ -79,10 +79,10 @@ bool is_receiving_charge() {
 
 void charging_set_shutdown_pin(bool shutdown) {
     if (shutdown) {
-        pinMode(CHARGING_SHUT_DOWN_PIN, OUTPUT);
-        digitalWrite(CHARGING_SHUT_DOWN_PIN, LOW);
+        pinMode(H_BRIDGE_SHUT_DOWN_PIN_AL, OUTPUT);
+        digitalWrite(H_BRIDGE_SHUT_DOWN_PIN_AL, LOW);
     } else {
-        pinMode(CHARGING_SHUT_DOWN_PIN, INPUT_PULLUP);
+        pinMode(H_BRIDGE_SHUT_DOWN_PIN_AL, INPUT_PULLUP);
     }
 }
 

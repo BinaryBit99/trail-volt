@@ -10,15 +10,14 @@
 #include "gpio.h"
 
 /**
- * @brief  Gets the temperature from the thermistor attached the upper cell.
+ * @brief  Gets the temperature from the thermistor attached the common series connection.
  * @return The temperature in C.
  */
-float temperature_get_upper_cell();
+float temperature_get_series_reading();
 
 /**
- * @brief  Gets the temperature from the thermistor attached the lower cell.
- * @return The temperature in C.
+ * @brief  Gets the temperature from the thermistor attached the common ground connection.
  */
-float temperature_get_lower_cell();
+float temperature_get_ground_reading();
 
 #endif /* TEMPERATURE_H */
