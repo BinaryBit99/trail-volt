@@ -22,8 +22,8 @@ float get_resistance(int pin) {
     float resistance = (5.0f * SERIES_RESISTOR) / drop;
 }
 
-float temperature_get_upper_cell() {
-    float resistance = get_resistance(UPPER_CELL_TEMP_PIN);
+float temperature_get_series_reading() {
+    float resistance = get_resistance(THERMISTOR_2_PIN);
 
     /*
      * Yet to be implemented.
@@ -32,8 +32,8 @@ float temperature_get_upper_cell() {
     return 0;
 }
 
-float temperature_get_lower_cell() {
-    float resistance = get_resistance(LOWER_CELL_TEMP_PIN);
+float temperature_get_ground_reading() {
+    float resistance = get_resistance(THERMISTOR_1_PIN);
 
     /*
      * Yet to be implemented.

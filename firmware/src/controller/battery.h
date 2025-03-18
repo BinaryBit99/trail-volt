@@ -4,8 +4,8 @@
 
 #include "mode.h"
 
-#define TOTAL_CELL_ADC_DIVISION 1
-#define LOWER_CELL_ADC_DIVISION 1
+#define TOTAL_CELL_ADC_DIVISION 4.0f
+#define LOWER_CELL_ADC_DIVISION 4.0f
 
 /**
  * The tolerable difference between the upper and lower cell voltages.
@@ -15,8 +15,8 @@
 typedef struct {
     float upper_cell_voltage_v;
     float lower_cell_voltage_v;
-    float upper_cell_temperature_c;
-    float lower_cell_temperature_c;
+    float ground_temperature_c;
+    float series_temperature_c;
     bool upper_discharging;
     bool lower_discharging;
 } battery_state_t;

@@ -12,20 +12,20 @@ battery_state_t battery_get_state() {
 
 void battery_set_upper_discharge(bool discharge) {
     if (discharge) {
-        digitalWrite(UPPER_CELL_DISCHARGE_PIN, HIGH);
+        digitalWrite(C2_BALANCING_PIN, HIGH);
         battery_state.upper_discharging = true;
     } else {
-        digitalWrite(UPPER_CELL_DISCHARGE_PIN, LOW);
+        digitalWrite(C2_BALANCING_PIN, LOW);
         battery_state.upper_discharging = false;
     }
 }
 
 void battery_set_lower_discharge(bool discharge) {
     if (discharge) {
-        digitalWrite(LOWER_CELL_DISCHARGE_PIN, HIGH);
+        digitalWrite(C1_BALANCING_PIN, HIGH);
         battery_state.lower_discharging = true;
     } else {
-        digitalWrite(LOWER_CELL_DISCHARGE_PIN, LOW);
+        digitalWrite(C1_BALANCING_PIN, LOW);
         battery_state.lower_discharging = false;
     }
 }
@@ -38,8 +38,8 @@ void battery_update_state() {
     battery_state.upper_cell_voltage_v = total_voltage - battery_state.lower_cell_voltage_v;
 
     // Read temperatures (no voltage divider)
-    battery_state.upper_cell_temperature_c = temperature_get_upper_cell();
-    battery_state.lower_cell_temperature_c = temperature_get_lower_cell();
+    battery_state.series_temperature_c = temperature_get_series_reading();
+    battery_state.ground_temperature_c = temperature_get_ground_reading();
 }
 
 float battery_get_voltage_difference() {

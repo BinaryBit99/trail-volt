@@ -2,16 +2,17 @@
 
 | Pin | Function      | Description                        |
 |-----|---------------|------------------------------------|
-| A0  | ADC0          | Cell 1 Battery Voltage             |
-| A1  | ADC1          | Cell 1 Battery Voltage             |
-| A2  | ADC2          | Thermistor Voltage 1               |
-| A3  | ADC3          | Thermistor Voltage 2               |
+| A0  | ADC0          | Thermistor 1                       |
+| A1  | ADC1          | Thermistor 1                       |
+| A2  | ADC2          | Total Cell Voltage                 |
+| A3  | ADC3          | Lower Cell Voltage                 |
 | A4  | SDA           | I2C SDA                            |
 | A5  | SCL           | I2C SCL                            |
-| D4  | DIGITAL OUT   | Upper Cell Discharge BJT Signal    |
-| D3  | PWM OUTPUT    | PWM Output wave                    |
-| D2  | DIGITAL OUT   | Lower Cell Discharge BJT Signal    |
-
-
-### ADC
-For each ADC input put, add a 150kOhm pull-down resistor.
+| A6  | -             | -                                  |
+| A7  | -             | -                                  |
+| D0  | DIGITAL OUT   | General Switch 1                   |
+| D5  | DIGITAL OUT   | Gate Driver Shutdown Signal        |
+| D6  | DIGITAL OUT   | USB Enabled                        |
+| D7  | DIGITAL OUT   | C1 Cell Balancing BJT Voltage      |
+| D8  | DIGITAL OUT   | C2 Cell Balancing BJT Voltage      |
+| D9  | ANALOG OUT    | Gate Driver PWM signal             |

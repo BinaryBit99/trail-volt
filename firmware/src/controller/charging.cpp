@@ -14,7 +14,7 @@ static Adafruit_INA260 ina260 = Adafruit_INA260();
 void charging_init() {
     if (!ina260.begin()) {
         D_printlnf("Couldn't find INA260");
-        //while (1);
+        while (1);
     } else {
         D_printlnf("Found INA260");
     }
@@ -52,6 +52,12 @@ uint8_t charging_calculate_duty_cycle() {
         alpha = 0;
     }
     float duty_cycle_step_uint8 = pow(error,alpha) + 1.0;
+
+    // Ensure duty cycle step converges to minimum value at certain threshold
+    if (error < SLOW_STEP_THESHOLD_V) {
+        duty_cycle_step_uint8 = 1;
+    }    
+
     if (voltage_overshoot > 0) {
         // Decrease duty cycle -> decrease voltage
         return constrain(current_duty_cycle - duty_cycle_step_uint8, 0, 255);
@@ -63,7 +69,7 @@ uint8_t charging_calculate_duty_cycle() {
 
 void charging_set_duty_cycle(uint8_t duty_cycle) {
     uint8_t sanitized_duty_cycle = constrain(duty_cycle, 0, 255);
-    analogWrite(PWM_PIN, sanitized_duty_cycle);
+    analogWrite(CHARGE_PWM_PIN, sanitized_duty_cycle);
     charging_state.duty_cycle_uint8 = sanitized_duty_cycle;
 }
 
@@ -73,10 +79,10 @@ bool is_receiving_charge() {
 
 void charging_set_shutdown_pin(bool shutdown) {
     if (shutdown) {
-        pinMode(CHARGING_SHUT_DOWN_PIN, OUTPUT);
-        digitalWrite(CHARGING_SHUT_DOWN_PIN, LOW);
+        pinMode(H_BRIDGE_SHUT_DOWN_PIN_AL, OUTPUT);
+        digitalWrite(H_BRIDGE_SHUT_DOWN_PIN_AL, LOW);
     } else {
-        pinMode(CHARGING_SHUT_DOWN_PIN, INPUT_PULLUP);
+        pinMode(H_BRIDGE_SHUT_DOWN_PIN_AL, INPUT_PULLUP);
     }
 }
 
@@ -99,4 +105,12 @@ bool charging_current_within_limits() {
      */
 
     return true;
+}
+
+bool charging_is_enabled() {
+    int charge_enable_switch = digitalRead(SWITCH_1_PIN);
+    if (charge_enable_switch == HIGH) {
+        return true;
+    }
+    return false;
 }
