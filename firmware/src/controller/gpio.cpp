@@ -11,10 +11,16 @@ void gpio_init() {
 
     pinMode(SWITCH_1_PIN, INPUT);
 
+    pinMode(BTN_1_PIN, INPUT);
+        
+    pinMode(BTN_2_PIN, INPUT);
+
     // Keep pin high by default (shutdown off)
     pinMode(H_BRIDGE_SHUT_DOWN_PIN_AL, INPUT_PULLUP);
 
+    // Keep high always
     pinMode(USB_ENABLE_PIN, OUTPUT);
+    digitalWrite(USB_ENABLE_PIN, HIGH);
 
     pinMode(C1_BALANCING_PIN, OUTPUT);
     pinMode(C2_BALANCING_PIN, OUTPUT);

@@ -244,6 +244,14 @@ void display_update() {
             y_pos += line_height;
 
             break;
+        case MODE_SUPPLYING:
+            display.setFont(&FreeSansBold6pt7b);
+            display.setCursor(text_start_x, y_pos);
+            display.print("SUPPLYING");
+            display.setTextSize(1);
+            display.setFont(&Font5x5Fixed);
+            y_pos += line_height;
+            break;
         case MODE_CHARGING_FAULT:
             display.setFont(&FreeSansBold6pt7b);
             display.setCursor(text_start_x, y_pos);

@@ -4,7 +4,7 @@
 #include "gpio.h"
 #include "mode.h"
 #include "debug.h"
-
+#include "supplying.h"
 
 void state_manager_init() {
     set_mode(MODE_MONITORING);
@@ -35,6 +35,10 @@ void state_manager_update_mode() {
                 next_mode = MODE_BALANCING;
                 break;
             }
+            if (supplying_is_enabled()) {
+                next_mode = MODE_SUPPLYING;
+                break;
+            }
             if (charging_state.is_faulty) {
                 next_mode = MODE_CHARGING_FAULT;
                 break;
@@ -54,10 +58,18 @@ void state_manager_update_mode() {
                 next_mode = MODE_BALANCING;
                 break;
             }
+            if (!supplying_is_enabled()) {
+                next_mode = MODE_MONITORING;
+                break;
+            }
             break;
         case MODE_MONITORING:
             if (needs_balancing) {
                 next_mode = MODE_BALANCING;
+                break;
+            }
+            if (supplying_is_enabled()) {
+                next_mode = MODE_SUPPLYING;
                 break;
             }
             if (charging_is_enabled()) {
