@@ -53,10 +53,10 @@ charging_state_t charging_get_state();
 void charging_update_state();
 
 /**
- * @brief  Determines if battery are in a state of charging.
+ * @brief  Determines if battery charging is enabled via hardware switch.
  * @return True if batteries are charging.
  */
-bool is_receiving_charge();
+bool charging_is_enabled();
 
 /**
  * @brief  Adjusts the duty cycle based on the charging status provided.
