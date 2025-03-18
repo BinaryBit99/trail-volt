@@ -4,8 +4,8 @@
 
 #include "mode.h"
 
-#define TOTAL_CELL_ADC_DIVISION 1
-#define LOWER_CELL_ADC_DIVISION 1
+#define TOTAL_CELL_ADC_DIVISION 4.0f
+#define LOWER_CELL_ADC_DIVISION 4.0f
 
 /**
  * The tolerable difference between the upper and lower cell voltages.

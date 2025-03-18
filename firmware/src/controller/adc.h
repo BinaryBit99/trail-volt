@@ -2,7 +2,7 @@
 #ifndef ADC_H
 #define	ADC_H
 
-#define ADC_VREF 5
+#define ADC_VREF 5.0f
 
 /**
  * @brief  Converts an ADC value to millivolts
