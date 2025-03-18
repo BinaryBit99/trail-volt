@@ -11,6 +11,7 @@
 | A6  | -             | -                                  |
 | A7  | -             | -                                  |
 | D0  | DIGITAL OUT   | General Switch 1                   |
+| D3  | ANALOG OUT    | Load Side PWM Signal               |
 | D5  | DIGITAL OUT   | Gate Driver Shutdown Signal        |
 | D6  | DIGITAL OUT   | USB Enabled                        |
 | D7  | DIGITAL OUT   | C1 Cell Balancing BJT Voltage      |
