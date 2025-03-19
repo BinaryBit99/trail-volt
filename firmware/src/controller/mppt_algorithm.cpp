@@ -62,7 +62,7 @@ float roundToNearestTenth(float value) {
     return roundf(value * 10.0f) / 10.0f;
 }
 
-uint8_t charging_calculate_duty_cycle() {
+void charging_calculate_duty_cycle() {
     
     // below are all the 'initial' SETUP conditions
     // Initial sensor readings
