@@ -17,6 +17,7 @@
 #define MIN_DUTY 0.0f         // Minimum duty cycle
 
 static charging_state_t charging_state;
+static duty_cycles duty;
 static Adafruit_INA260 ina260 = Adafruit_INA260();
 
 // Initial conditions below:
