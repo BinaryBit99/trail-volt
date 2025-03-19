@@ -134,7 +134,7 @@ uint8_t charging_calculate_duty_cycle() {
     
 }
 
-void charging_set_all_duty_cycle(uint8_t duty_cycle, uint8_t duty_load_cycle) {        // One function all together for both PWM signals.
+void charging_set_all_duty_cycle(struct duty_cycles) {        // One function all together for both PWM signals.
     uint8_t sanitized_duty_cycle = constrain(duty_cycle, 0, 255);
     analogWrite(CHARGE_PWM_PIN, sanitized_duty_cycle);
     charging_state.duty_cycle_uint8 = sanitized_duty_cycle;
