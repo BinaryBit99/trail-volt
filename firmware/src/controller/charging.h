@@ -36,6 +36,11 @@ typedef struct {
   power_metrics_t power_metrics;
 } charging_state_t;
 
+typedef struct {
+  uint8_t duty_mppt;
+  uint8_t duty_load;
+} duty_cycles;
+
 /**
  * @brief  Initialize charging.
  */
