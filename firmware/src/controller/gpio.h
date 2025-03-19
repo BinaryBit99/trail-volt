@@ -15,6 +15,8 @@ const int LOWER_CELL_ADC_PIN = A3;
 
 // A4 & A5 are used for I2C  
 
+const int MPPT_VOLTAGE_PIN = A6;
+
 /* A6 not functional on current board */
 const int CHARGE_VOLTAGE_PIN = A7;
 
