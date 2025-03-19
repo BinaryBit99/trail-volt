@@ -123,8 +123,8 @@ uint8_t charging_calculate_duty_cycle() {
     // constrain dutyCycle within [MIN_DUTY, MAX_DUTY]
     if (dutyCycle > MAX_DUTY) dutyCycle = MAX_DUTY;
     if (dutyCycle < MIN_DUTY) dutyCycle = MIN_DUTY;
-    charging_set_duty_cycle(dutyCycle); // Update PWM duty cycle for the converter
-    set_load_duty(loadDutyCycle);
+    duty.mppt_duty = dutyCycle;        // Update PWM duty cycle for the converter
+    duty.load_duty = loadDutyCycle;    // update PWM DUTY cycle to load
     //update previous measurements
     v_prev = v_new;
     i_prev = i_new;
