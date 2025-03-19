@@ -22,7 +22,7 @@ const int CHARGE_VOLTAGE_PIN = A7;
 const int SWITCH_1_PIN = 0;
 
 /* Load side PWM duty cycle pin */
-const int LOAD_PWM = 3;
+const int LOAD_PWM = 10;
 
 /* Fed into the shutdown pin for our gate driver. Is active low. */
 const int H_BRIDGE_SHUT_DOWN_PIN_AL = 5;
