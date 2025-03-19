@@ -19,6 +19,23 @@
 static charging_state_t charging_state;
 static Adafruit_INA260 ina260 = Adafruit_INA260();
 
+// Initial conditions below:
+
+float v_prev, i_prev, v_new, i_new; // These guys will be our variables used for inc. cond. alg.
+float delta_v, delta_i;     
+int MPPT_voltage_1024;
+float dutyCycle = 0f;      // Set duty cycle to 0% initially - this is what we are manipulating for the algorithm.
+charging_set_duty_cycle(dutyCycle);   
+set_load_duty(0); // Set load duty cycle to 0 initially
+float loadDutyCycle = 0f;
+float divider_ratio = (180/310);
+float MPPT_voltage_raw;
+float total_cell_voltage_raw;
+float MPPT_voltage_rawscaled;
+float total_cell_voltage_rawscaled;
+
+
+
 void charging_init() {
     if (!ina260.begin()) {
         D_printlnf("Couldn't find INA260");
@@ -44,111 +61,90 @@ float roundToNearestTenth(float value) {
     return roundf(value * 10.0f) / 10.0f;
 }
 
-int main(void) {
+uint8_t charging_calculate_duty_cycle() {
     
     // below are all the 'initial' SETUP conditions
-
-    float v_prev, i_prev, v_new, i_new; // These guys will be our variables used for inc. cond. alg.
-    float delta_v, delta_i;     
-
-
-    int MPPT_voltage_1024;
-    
-    float dutyCycle = 0f;      // Set duty cycle to 0% initially - this is what we are manipulating for the algorithm.
-    charging_set_duty_cycle(dutyCycle);   
-    set_load_duty(0); // Set load duty cycle to 0 initially
-
-    float loadDutyCycle = 0f;
-
-    float divider_ratio = (180/310);
-
-    float MPPT_voltage_raw;
-    float total_cell_voltage_raw;
-    float MPPT_voltage_rawscaled;
-    float total_cell_voltage_rawscaled;
-
     // Initial sensor readings
     v_prev = charging_state.power_metrics.ina_bus_voltage_v;
     i_prev = charging_state.power_metrics.ina_current_ma;
     
-    while(true) {
-        
-        // Fetch the current Voltage and Current for MPPT (Update Values)
+    // Fetch the current Voltage and Current for MPPT (Update Values)
 
-        MPPT_voltage_1024 = analogRead(MPPT_VOLTAGE_PIN); // READ IN FROM A6
-        int currCellVoltage = analogRead(TOTAL_CELL_ADC_PIN);
+    MPPT_voltage_1024 = analogRead(MPPT_VOLTAGE_PIN); // READ IN FROM A6
+    int currCellVoltage = analogRead(TOTAL_CELL_ADC_PIN);
 
-        total_cell_voltage_raw = (currCellVoltage) * (5/1024);  // Re-scale everything.
-        MPPT_voltage_raw = (MPPT_voltage_1024) * (5/1024);
-        
-        MPPT_voltage_rawscaled = MPPT_voltage_raw / divider_ratio; // Actualized analog voltage from schematic
-        total_cell_voltage_rawscaled = total_cell_voltage_raw / divider_ratio;
-        total_cell_voltage_rawscaled = roundToNearestTenth(total_cell_voltage_rawscaled);   // to help make things converge while ensuring accuracy
+    total_cell_voltage_raw = (currCellVoltage) * (5/1024);  // Re-scale everything.
+    MPPT_voltage_raw = (MPPT_voltage_1024) * (5/1024);
+    
+    MPPT_voltage_rawscaled = MPPT_voltage_raw / divider_ratio; // Actualized analog voltage from schematic
+    total_cell_voltage_rawscaled = total_cell_voltage_raw / divider_ratio;
+    total_cell_voltage_rawscaled = roundToNearestTenth(total_cell_voltage_rawscaled);   // to help make things converge while ensuring accuracy
 
-        while(total_cell_voltage_rawscaled != 8.20) {
-            if(total_cell_voltage_rawscaled < 8.20){
-                loadDutyCycle += STEP_SIZE;
-            } else{
-                loadDutyCycle -= STEP_SIZE;
-            }
+    while(total_cell_voltage_rawscaled != 8.20) {
+        if(total_cell_voltage_rawscaled < 8.20){
+            loadDutyCycle += STEP_SIZE;
+        } else{
+            loadDutyCycle -= STEP_SIZE;
         }
-
-        v_new = charging_state.power_metrics.ina_bus_voltage_v;
-        i_new = charging_state.power_metrics.ina_current_ma;
-        
-        // Calculate the changes (increments)
-        delta_v = v_new - v_prev;
-        delta_i = i_new - i_prev;
-        
-        // if the voltage change is negligible
-        if (fabs(delta_v) < 1e-6) {
-            if(delta_i > 0)
-                dutyCycle += STEP_SIZE;
-                
-            else if(delta_i < 0)
-                dutyCycle -= STEP_SIZE;
-               
-        } else {
-            // calculate the incremental conductance and compare with the negative instantaneous conductance
-            float incCond = delta_i / delta_v;
-            float instCond = -i_new / v_new;
-            if (fabs(incCond - instCond) < TOLERANCE) {
-                // at MPP: do nothing, or maintain the current duty cycle
-            } else if (incCond > instCond) {
-                // operating point is to the left of MPP, increase voltage (by increasing duty cycle)
-                dutyCycle += STEP_SIZE;
-        
-            } else if (incCond < instCond) {
-                // operating point is to the right of MPP, decrease voltage (by decreasing duty cycle)
-                dutyCycle -= STEP_SIZE;
-                
-            }
-        }
-        // constrain dutyCycle within [MIN_DUTY, MAX_DUTY]
-        if (dutyCycle > MAX_DUTY) dutyCycle = MAX_DUTY;
-        if (dutyCycle < MIN_DUTY) dutyCycle = MIN_DUTY;
-        charging_set_duty_cycle(dutyCycle); // Update PWM duty cycle for the converter
-        set_load_duty(loadDutyCycle);
-        //update previous measurements
-        v_prev = v_new;
-        i_prev = i_new;
-        
-        // insert delay for next sampling period 
-        // delay_ms(SAMPLING_PERIOD_MS);
     }
-    return 0;
+
+    v_new = charging_state.power_metrics.ina_bus_voltage_v;
+    i_new = charging_state.power_metrics.ina_current_ma;
+    
+    // Calculate the changes (increments)
+    delta_v = v_new - v_prev;
+    delta_i = i_new - i_prev;
+    
+    // if the voltage change is negligible
+    if (fabs(delta_v) < 1e-6) {
+        if(delta_i > 0)
+            dutyCycle += STEP_SIZE;
+            
+        else if(delta_i < 0)
+            dutyCycle -= STEP_SIZE;
+           
+    } else {
+        // calculate the incremental conductance and compare with the negative instantaneous conductance
+        float incCond = delta_i / delta_v;
+        float instCond = -i_new / v_new;
+        if (fabs(incCond - instCond) < TOLERANCE) {
+            // at MPP: do nothing, or maintain the current duty cycle
+        } else if (incCond > instCond) {
+            // operating point is to the left of MPP, increase voltage (by increasing duty cycle)
+            dutyCycle += STEP_SIZE;
+    
+        } else if (incCond < instCond) {
+            // operating point is to the right of MPP, decrease voltage (by decreasing duty cycle)
+            dutyCycle -= STEP_SIZE;
+            
+        }
+    }
+    // constrain dutyCycle within [MIN_DUTY, MAX_DUTY]
+    if (dutyCycle > MAX_DUTY) dutyCycle = MAX_DUTY;
+    if (dutyCycle < MIN_DUTY) dutyCycle = MIN_DUTY;
+    charging_set_duty_cycle(dutyCycle); // Update PWM duty cycle for the converter
+    set_load_duty(loadDutyCycle);
+    //update previous measurements
+    v_prev = v_new;
+    i_prev = i_new;
+    
+    // insert delay for next sampling period 
+    // delay_ms(SAMPLING_PERIOD_MS);
+    
 }
 
-void charging_set_duty_cycle(uint8_t duty_cycle) {
+void charging_set_all_duty_cycle(uint8_t duty_cycle, uint8_t duty_load_cycle) {        // One function all together for both PWM signals.
     uint8_t sanitized_duty_cycle = constrain(duty_cycle, 0, 255);
     analogWrite(CHARGE_PWM_PIN, sanitized_duty_cycle);
     charging_state.duty_cycle_uint8 = sanitized_duty_cycle;
-}
-
-void set_load_duty(uint8_t duty_load_cycle) {
     uint8_t dl_cycle = constrain(duty_load_cycle, 0, 255);
     analogWrite(LOAD_PWM, dl_cycle); // updates LOAD_PWM pin
 }
+
+// void set_load_duty(uint8_t duty_load_cycle) {
+//     uint8_t dl_cycle = constrain(duty_load_cycle, 0, 255);
+//     analogWrite(LOAD_PWM, dl_cycle); // updates LOAD_PWM pin
+// }
 
 bool is_receiving_charge() {
     return true;
