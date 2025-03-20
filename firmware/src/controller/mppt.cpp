@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "mppt_algorithm.h"
+#include "mppt.h"
 
 float round_to_nearest_tenth(float value) {
     return roundf(value * 10.0f) / 10.0f;

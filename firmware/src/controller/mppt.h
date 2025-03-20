@@ -1,5 +1,5 @@
-#ifndef TEMPERATURE_H
-#define	TEMPERATURE_H
+#ifndef MPPT_H
+#define	MPPT_H
 
 #include "charging.h"
 #include "gpio.h"
@@ -22,4 +22,4 @@ float round_to_nearest_tenth(float value);
 
 duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state);
 
-#endif
+#endif /* MPPT_H */

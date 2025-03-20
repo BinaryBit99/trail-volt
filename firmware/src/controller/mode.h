@@ -13,7 +13,7 @@ typedef enum {
 mode_e get_mode();
 void set_mode(mode_e mode);
 
-#endif	/* APPLICATION_H */
+#endif	/* MODE_H */
 
 
 

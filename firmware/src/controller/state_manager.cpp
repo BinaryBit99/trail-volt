@@ -5,7 +5,7 @@
 #include "mode.h"
 #include "debug.h"
 #include "supplying.h"
-#include "mppt_algorithm.h"
+#include "mppt.h"
 
 void state_manager_init() {
     set_mode(MODE_MONITORING);
