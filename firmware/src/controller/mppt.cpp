@@ -13,8 +13,8 @@ duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state) {
     float v_prev, i_prev, v_new, i_new; // These guys will be our variables used for inc. cond. alg.
     float delta_v, delta_i;     
     int MPPT_voltage_1024;
-    uint8_t pwmDutyCycle = 0;      // Set duty cycle to 0% initially - this is what we are manipulating for the algorithm.
-    uint8_t loadDutyCycle = 0;
+    uint8_t pwmDutyCycle;      // Set duty cycle to 0% initially - this is what we are manipulating for the algorithm.
+    uint8_t loadDutyCycle;
 
 
     // below are all the 'initial' SETUP conditions
@@ -26,14 +26,15 @@ duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state) {
     MPPT_voltage_1024 = charging_state.power_metrics.mppt_voltage_v;
     // Our cell voltage total cell voltage will be read from INA
     int currCellVoltage = charging_state.power_metrics.ina_bus_voltage_v;
+
+    float error = 0.50;
+
+    float upperRange = 9;
+    float lowerRange = 8;
+
+    float newvar = currCellVoltage - error;
     
-    while(currCellVoltage != 8.20) {
-        if(currCellVoltage < 8.20){
-            loadDutyCycle += STEP_SIZE;
-        } else{
-            loadDutyCycle -= STEP_SIZE;
-        }
-    }
+    
 
     v_new = charging_state.power_metrics.ina_bus_voltage_v;
     i_new = charging_state.power_metrics.ina_current_ma;
@@ -41,6 +42,14 @@ duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state) {
     // Calculate the changes (increments)
     delta_v = v_new - v_prev;
     delta_i = i_new - i_prev;
+
+    float verror = fabs(delta_v);
+    
+    if(verror > 0) {
+        loadDutyCycle -= STEP_SIZE;
+    } else {
+        loadDutyCycle += STEP_SIZE;
+    }
     
     // if the voltage change is negligible
     if (fabs(delta_v) < 1e-6) {
