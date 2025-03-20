@@ -5,6 +5,7 @@
 #include "mode.h"
 #include "debug.h"
 #include "supplying.h"
+#include "mppt_algorithm.h"
 
 void state_manager_init() {
     set_mode(MODE_MONITORING);
@@ -132,8 +133,8 @@ void state_manager_apply_hardware_updates() {
         case MODE_RECEIVING:
             battery_set_upper_discharge(false);
             battery_set_lower_discharge(false);
-            
-            charging_set_duty_cycle(charging_calculate_duty_cycle());
+
+            charging_set_duty_cycles(mppt_calculate_duty_cycles(charging_state));
             break;
         case MODE_SUPPLYING:
             charging_stop();

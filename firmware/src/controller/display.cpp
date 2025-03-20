@@ -149,7 +149,7 @@ void display_update() {
     uint8_t y_pos = text_start_y + 10;
 
     float total_voltage = volt1 + volt2;
-    float percentage_duty_cycle = charging_state.duty_cycle_uint8 * ((float)100/255);
+    float percentage_duty_cycle = charging_state.duty_cycles.duty_mppt * ((float)100/255);
 
     switch (mode) {
         case MODE_SLEEP:

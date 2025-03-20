@@ -1,6 +1,11 @@
 #include "temperature.h"
 #include "adc.h"
 
+#include <math.h>
+#include <stdint.h>
+
+#define ADC_MAX   1023   // Arduino Nano has a 10-bit ADC (0-1023)
+
 float get_resistance(int pin) {
     float voltage = read_from_adc(pin, THERMISTOR_ADC_DIVISION);
 
@@ -33,3 +38,5 @@ float temperature_get_ground_reading() {
      
     return 0;
 }
+
+
