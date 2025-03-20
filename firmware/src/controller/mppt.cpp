@@ -1,9 +1,11 @@
 #include <Arduino.h>
 #include "mppt.h"
+#include "adc.h"
 
-float round_to_nearest_tenth(float value) {
-    return roundf(value * 10.0f) / 10.0f;
-}
+/**
+ * Save the previous charging state for context when determining rate of change.
+ */
+static charging_state_t prev_charging_state;
 
 duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state) {
 
@@ -11,34 +13,22 @@ duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state) {
     float v_prev, i_prev, v_new, i_new; // These guys will be our variables used for inc. cond. alg.
     float delta_v, delta_i;     
     int MPPT_voltage_1024;
-    float dutyCycle = 0.0f;      // Set duty cycle to 0% initially - this is what we are manipulating for the algorithm.
-    float loadDutyCycle = 0.0f;
-    float divider_ratio = (180/310);
-    float MPPT_voltage_raw;
-    float total_cell_voltage_raw;
-    float MPPT_voltage_rawscaled;
-    float total_cell_voltage_rawscaled;
+    uint8_t pwmDutyCycle = 0;      // Set duty cycle to 0% initially - this is what we are manipulating for the algorithm.
+    uint8_t loadDutyCycle = 0;
 
 
     // below are all the 'initial' SETUP conditions
     // Initial sensor readings
-    v_prev = charging_state.power_metrics.ina_bus_voltage_v;
-    i_prev = charging_state.power_metrics.ina_current_ma;
+    v_prev = prev_charging_state.power_metrics.ina_bus_voltage_v;
+    i_prev = prev_charging_state.power_metrics.ina_current_ma;
     
-    // Fetch the current Voltage and Current for MPPT (Update Values)
-
-    MPPT_voltage_1024 = analogRead(MPPT_VOLTAGE_PIN); // READ IN FROM A6
-    int currCellVoltage = analogRead(TOTAL_CELL_ADC_PIN);
-
-    total_cell_voltage_raw = (currCellVoltage) * (5/1024);  // Re-scale everything.
-    MPPT_voltage_raw = (MPPT_voltage_1024) * (5/1024);
+    // Voltage and Current for MPPT (Update Values)
+    MPPT_voltage_1024 = charging_state.power_metrics.mppt_voltage_v;
+    // Our cell voltage total cell voltage will be read from INA
+    int currCellVoltage = charging_state.power_metrics.ina_bus_voltage_v;
     
-    MPPT_voltage_rawscaled = MPPT_voltage_raw / divider_ratio; // Actualized analog voltage from schematic
-    total_cell_voltage_rawscaled = total_cell_voltage_raw / divider_ratio;
-    total_cell_voltage_rawscaled = round_to_nearest_tenth(total_cell_voltage_rawscaled);   // to help make things converge while ensuring accuracy
-
-    while(total_cell_voltage_rawscaled != 8.20) {
-        if(total_cell_voltage_rawscaled < 8.20){
+    while(currCellVoltage != 8.20) {
+        if(currCellVoltage < 8.20){
             loadDutyCycle += STEP_SIZE;
         } else{
             loadDutyCycle -= STEP_SIZE;
@@ -55,10 +45,10 @@ duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state) {
     // if the voltage change is negligible
     if (fabs(delta_v) < 1e-6) {
         if(delta_i > 0)
-            dutyCycle += STEP_SIZE;
+            pwmDutyCycle += STEP_SIZE;
             
         else if(delta_i < 0)
-            dutyCycle -= STEP_SIZE;
+            pwmDutyCycle -= STEP_SIZE;
            
     } else {
         // calculate the incremental conductance and compare with the negative instantaneous conductance
@@ -68,24 +58,23 @@ duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state) {
             // at MPP: do nothing, or maintain the current duty cycle
         } else if (incCond > instCond) {
             // operating point is to the left of MPP, increase voltage (by increasing duty cycle)
-            dutyCycle += STEP_SIZE;
+            pwmDutyCycle += STEP_SIZE;
     
         } else if (incCond < instCond) {
             // operating point is to the right of MPP, decrease voltage (by decreasing duty cycle)
-            dutyCycle -= STEP_SIZE;
+            pwmDutyCycle -= STEP_SIZE;
             
         }
     }
     // constrain dutyCycle within [MIN_DUTY, MAX_DUTY]
-    if (dutyCycle > MAX_DUTY) dutyCycle = MAX_DUTY;
-    if (dutyCycle < MIN_DUTY) dutyCycle = MIN_DUTY;
+    if (pwmDutyCycle > MAX_DUTY) pwmDutyCycle = MAX_DUTY;
+    if (pwmDutyCycle < MIN_DUTY) pwmDutyCycle = MIN_DUTY;  
 
-    //update previous measurements
-    v_prev = v_new;
-    i_prev = i_new;    
+    // Update previous charging state for next call
+    prev_charging_state = charging_state;
 
     duty_cycles_t duty_cycles = {
-        .duty_mppt = dutyCycle,
+        .duty_mppt = pwmDutyCycle,
         .duty_load = loadDutyCycle,
     };
 

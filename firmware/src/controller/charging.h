@@ -5,19 +5,7 @@
 #include "mode.h"
 
 // App Voltage = ADC reading * CHARGE_VOLTAGE_DIVIDER_RATIO
-#define CHARGE_VOLTAGE_DIVIDER_RATIO 3.925f
-
-/**
- * The acceptable difference between CHARGING_VOLTAGE_V and our current charging.
- */
-#define CHARING_VOLTAGE_TOLERANCE 0.050f
-
-/*
- * At this error value, set the pwm step to minimum.
- */
-#define SLOW_STEP_THESHOLD_V 1.00f
-
-#define CHARGING_VOLTAGE_V 8.2f
+#define MPPT_DIVIDER_RATIO 3.925f
 
 #define MIN_CHARGE_CURRENT_A 0.5f
 #define MAX_CHARGE_CURRENT_A 2.0f
@@ -26,7 +14,7 @@ typedef struct {
   float ina_current_ma;
   float ina_bus_voltage_v;
   float ina_power_w;
-  float charge_voltage_v;
+  float mppt_voltage_v;
 } power_metrics_t;
 
 typedef struct {

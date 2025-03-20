@@ -29,7 +29,7 @@ void charging_update_state() {
     charging_state.power_metrics.ina_current_ma = ina260.readCurrent();
     charging_state.power_metrics.ina_power_w = ina260.readPower() / (float)1000;
 
-    charging_state.power_metrics.charge_voltage_v = read_from_adc(MPPT_VOLTAGE_PIN, CHARGE_VOLTAGE_DIVIDER_RATIO);
+    charging_state.power_metrics.mppt_voltage_v = read_from_adc(MPPT_VOLTAGE_PIN, MPPT_DIVIDER_RATIO);
     charging_state.is_faulty = !charging_current_within_limits();
 }
 

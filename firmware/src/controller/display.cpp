@@ -173,8 +173,8 @@ void display_update() {
 
             // Supply voltage as seen by the batteries taken from ADC
             display.setCursor(text_start_x, y_pos);
-            display.print("V-SUP-DIV: ");
-            display.print(charging_state.power_metrics.charge_voltage_v, 2);  // Print average voltage with 2 decimal places
+            display.print("V-MPPT: ");
+            display.print(charging_state.power_metrics.mppt_voltage_v, 2);  // Print average voltage with 2 decimal places
             display.print("V");
             y_pos += line_height;
 
