@@ -13,8 +13,8 @@ duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state) {
     float v_prev, i_prev, v_new, i_new; // These guys will be our variables used for inc. cond. alg.
     float delta_v, delta_i;     
     int MPPT_voltage_1024;
-    uint8_t pwmDutyCycle = 0;      // Set duty cycle to 0% initially - this is what we are manipulating for the algorithm.
-    uint8_t loadDutyCycle = 0;
+    uint8_t pwmDutyCycle;      // Set duty cycle to 0% initially - this is what we are manipulating for the algorithm.
+    uint8_t loadDutyCycle;
 
 
     // below are all the 'initial' SETUP conditions
