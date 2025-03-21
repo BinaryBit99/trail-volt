@@ -39,7 +39,7 @@ void state_manager_update_mode() {
                 next_mode = MODE_SUPPLYING;
                 break;
             }
-            if (charging_state.is_faulty) {
+            if (charging_state.is_over_current) {
                 next_mode = MODE_CHARGING_FAULT;
                 break;
             }
@@ -49,7 +49,7 @@ void state_manager_update_mode() {
             }
             break;
         case MODE_CHARGING_FAULT:
-            if (!charging_state.is_faulty) {
+            if (!charging_state.is_over_current) {
                 next_mode = MODE_MONITORING;
             }
             break;

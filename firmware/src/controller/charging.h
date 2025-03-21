@@ -19,8 +19,7 @@
 
 #define CHARGING_VOLTAGE_V 8.2f
 
-#define MIN_CHARGE_CURRENT_A 0.5f
-#define MAX_CHARGE_CURRENT_A 2.0f
+#define MAX_CHARGE_CURRENT_A 0.5f
 
 typedef struct {
   float ina_current_ma;
@@ -31,7 +30,7 @@ typedef struct {
 
 typedef struct {
   bool is_charging;
-  bool is_faulty;
+  bool is_over_current;
   uint8_t duty_cycle_uint8;
   power_metrics_t power_metrics;
 } charging_state_t;

@@ -30,7 +30,7 @@ void charging_update_state() {
     charging_state.power_metrics.ina_power_w = ina260.readPower() / (float)1000;
 
     charging_state.power_metrics.charge_voltage_v = read_from_adc(CHARGE_VOLTAGE_PIN, CHARGE_VOLTAGE_DIVIDER_RATIO);
-    charging_state.is_faulty = !charging_current_within_limits();
+    charging_state.is_over_current = !charging_current_within_limits();
 }
 
 uint8_t charging_calculate_duty_cycle() {
@@ -98,13 +98,9 @@ void charging_stop() {
 }
 
 bool charging_current_within_limits() {
-    bool in_limits = (charging_state.power_metrics.ina_current_ma < MAX_CHARGE_CURRENT_A) && (charging_state.power_metrics.ina_current_ma > MIN_CHARGE_CURRENT_A );
+    bool in_limits = (charging_state.power_metrics.ina_current_ma < MAX_CHARGE_CURRENT_A);
 
-    /*
-     * Since our hardware is not yet setup for determining current values, return true.
-     */
-
-    return true;
+    return in_limits;
 }
 
 bool charging_is_enabled() {
