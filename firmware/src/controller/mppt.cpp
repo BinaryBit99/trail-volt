@@ -39,11 +39,11 @@ duty_cycles_t mppt_calculate_duty_cycles(charging_state_t charging_state) {
     v_new = charging_state.power_metrics.ina_bus_voltage_v;
     i_new = charging_state.power_metrics.ina_current_ma;
     
-    // Calculate the changes (increments)
-    delta_v = v_new - v_prev;
-    delta_i = i_new - i_prev;
+    // // Calculate the changes (increments)
+    // delta_v = v_new - v_prev;
+    // delta_i = i_new - i_prev;
 
-    float verror = fabs(delta_v);
+    // float verror = fabs(delta_v);
     
     if(verror > 0) {
         loadDutyCycle -= STEP_SIZE;
